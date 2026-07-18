@@ -1,0 +1,133 @@
+services:
+  # ── PostgreSQL - Lançamentos ──────────────────────────────
+  postgres-lancamentos:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fluxocaixa_lancamentos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_lancamentos_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fluxocaixa_lancamentos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fluxocaixa-network
+
+  # ── PostgreSQL - Consolidado ──────────────────────────────
+  postgres-consolidado:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fluxocaixa_consolidado
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_consolidado_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fluxocaixa_consolidado"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fluxocaixa-network
+
+  # ── RabbitMQ ──────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5674:5672"     # AMQP
+      - "15674:15672"   # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fluxocaixa-network
+
+  # ── Redis ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fluxocaixa-network
+
+  # ── API - Lançamentos ─────────────────────────────────────
+  api-lancamentos:
+    build:
+      context: .
+      dockerfile: src/FluxoCaixa.Lancamentos/FluxoCaixa.Lancamentos.API/Dockerfile
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__LancamentosDb=Host=postgres-lancamentos;Port=5432;Database=fluxocaixa_lancamentos;Username=postgres;Password=postgres
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - Jwt__SecretKey=${JWT_SECRET_KEY:-CarrefourFluxoCaixaSecretKey2024!@#$%}
+    ports:
+      - "5101:8080"
+    depends_on:
+      postgres-lancamentos:
+        condition: service_healthy
+    networks:
+      - fluxocaixa-network
+
+  # ── API - Consolidado ─────────────────────────────────────
+  api-consolidado:
+    build:
+      context: .
+      dockerfile: src/FluxoCaixa.Consolidado/FluxoCaixa.Consolidado.API/Dockerfile
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__ConsolidadoDb=Host=postgres-consolidado;Port=5432;Database=fluxocaixa_consolidado;Username=postgres;Password=postgres
+      - ConnectionStrings__Redis=redis:6379
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - Jwt__SecretKey=${JWT_SECRET_KEY:-CarrefourFluxoCaixaSecretKey2024!@#$%}
+    ports:
+      - "5102:8080"
+    depends_on:
+      postgres-consolidado:
+        condition: service_healthy
+    networks:
+      - fluxocaixa-network
+
+volumes:
+  postgres_lancamentos_data:
+  postgres_consolidado_data:
+  rabbitmq_data:
+  redis_data:
+
+networks:
+  fluxocaixa-network:
+    driver: bridge

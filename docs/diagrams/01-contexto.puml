@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 1 - Contexto do Sistema de Fluxo de Caixa
+
+Person(comerciante, "Comerciante", "Registra debitos e creditos e consulta o saldo diario.")
+
+System(fluxo_caixa, "Sistema de Fluxo de Caixa", "Controla lancamentos financeiros e disponibiliza o consolidado diario com consistencia eventual.")
+
+Rel(comerciante, fluxo_caixa, "Registra lancamentos e consulta consolidados", "JSON/HTTP + JWT")
+
+SHOW_LEGEND()
+@enduml

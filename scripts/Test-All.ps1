@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$ProjectName = "fluxocaixa"
+    [string]$ProjectName = "carrefour-fluxocaixa-prova"
 )
 
 $ErrorActionPreference = "Stop"

@@ -23,7 +23,7 @@ Escopo: evidência reproduzível para a prova, não certificação de produção
 ## Comandos
 
 ```powershell
-docker compose -p fluxocaixa up -d --build
+docker compose up -d --build
 dotnet test FluxoCaixa.sln --configuration Release
 dotnet list FluxoCaixa.sln package --vulnerable --include-transitive
 .\scripts\Test-Smoke.ps1

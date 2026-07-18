@@ -2,7 +2,8 @@
 param(
     [string]$LancamentosUrl = "http://localhost:5101",
     [string]$ConsolidadoUrl = "http://localhost:5102",
-    [int]$TimeoutSeconds = 30
+    [int]$TimeoutSeconds = 30,
+    [int]$StartupTimeoutSeconds = 90
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,6 +24,27 @@ function Get-ErrorStatusCode {
     }
 }
 
+function Wait-Ready {
+    param(
+        [string]$Name,
+        [string]$Url
+    )
+
+    $deadline = [DateTime]::UtcNow.AddSeconds($StartupTimeoutSeconds)
+    while ([DateTime]::UtcNow -lt $deadline) {
+        try {
+            Invoke-RestMethod -Uri "$Url/health/ready" -TimeoutSec 5 | Out-Null
+            Write-Host "$Name pronto."
+            return
+        }
+        catch {
+            Start-Sleep -Seconds 2
+        }
+    }
+
+    throw "$Name nao ficou pronto em $StartupTimeoutSeconds segundos: $Url/health/ready"
+}
+
 function New-Lancamento {
     param([int]$Tipo, [decimal]$Valor, [string]$Descricao)
 
@@ -34,8 +56,8 @@ function New-Lancamento {
 }
 
 try {
-    Invoke-RestMethod -Uri "$LancamentosUrl/health/ready" | Out-Null
-    Invoke-RestMethod -Uri "$ConsolidadoUrl/health/ready" | Out-Null
+    Wait-Ready -Name "Servico de lancamentos" -Url $LancamentosUrl
+    Wait-Ready -Name "Servico de consolidado" -Url $ConsolidadoUrl
 
     $statusSemToken = Get-ErrorStatusCode {
         Invoke-RestMethod -Uri "$LancamentosUrl/api/lancamentos?data=$data"

@@ -32,7 +32,7 @@ jobs:
         run: dotnet test FluxoCaixa.sln --configuration Release --no-build
 
       - name: Validate Compose
-        run: docker compose -p fluxocaixa config --quiet
+        run: docker compose config --quiet
 
       - name: Audit NuGet dependencies
         shell: bash

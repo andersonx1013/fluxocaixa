@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$ProjectName = "fluxocaixa",
+    [string]$ProjectName = "carrefour-fluxocaixa-prova",
     [string]$LancamentosUrl = "http://localhost:5101",
     [string]$ConsolidadoUrl = "http://localhost:5102",
     [int]$TimeoutSeconds = 45

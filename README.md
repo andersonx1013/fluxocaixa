@@ -46,9 +46,21 @@ Nenhum Java é necessário. A renderização PlantUML também ocorre em um conta
 No PowerShell, dentro da raiz do repositório:
 
 ```powershell
-docker compose -p fluxocaixa up -d --build
-docker compose -p fluxocaixa ps
+docker compose up -d --build
+docker compose ps
 ```
+
+### Isolamento Docker
+
+O arquivo Compose fixa o projeto como `carrefour-fluxocaixa-prova`. Assim, mesmo sem informar `-p`, todos os recursos recebem um namespace exclusivo:
+
+- containers: `carrefour-fluxocaixa-prova-*`;
+- rede privada: `carrefour-fluxocaixa-prova_fluxocaixa-network`;
+- volumes: `carrefour-fluxocaixa-prova_postgres_*`, `carrefour-fluxocaixa-prova_rabbitmq_data` e `carrefour-fluxocaixa-prova_redis_data`.
+
+Nenhuma rede ou volume é declarado como `external`. Os comandos `down` e `down -v` atuam apenas nesse ambiente da prova e não alteram containers de outros projetos.
+
+A rede bridge é dedicada ao projeto e não é compartilhada com outros ambientes Docker. Todas as portas publicadas são vinculadas somente a `127.0.0.1`, sem exposição para a rede local da máquina; os containers só ingressariam em outra rede se isso fosse configurado explicitamente.
 
 Serviços locais:
 
@@ -67,14 +79,14 @@ O endpoint `/health` mostra todas as dependências, inclusive as degradáveis Ra
 Para encerrar sem apagar dados:
 
 ```powershell
-docker compose -p fluxocaixa down
+docker compose down
 ```
 
 Para reiniciar do zero, apagando exclusivamente os volumes deste projeto:
 
 ```powershell
-docker compose -p fluxocaixa down -v
-docker compose -p fluxocaixa up -d --build
+docker compose down -v
+docker compose up -d --build
 ```
 
 ## Autenticação local
@@ -90,7 +102,7 @@ A chave default é apenas uma credencial de demonstração local. Ela pode ser s
 
 ```powershell
 $env:JWT_SECRET_KEY = "uma-chave-local-forte-com-pelo-menos-32-bytes"
-docker compose -p fluxocaixa up -d --build
+docker compose up -d --build
 $token = .\scripts\New-LocalJwt.ps1 -Secret $env:JWT_SECRET_KEY
 ```
 

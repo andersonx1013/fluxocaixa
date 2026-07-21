@@ -85,3 +85,4 @@ O projeto inclui scripts automatizados para validação de resiliência e carga:
 - 🎯 [SLOs, RTO e RPO](docs/SLOS.md)
 - 📖 [Glossário Técnico](docs/GLOSSARIO.md)
 - 📊 [Diagramas C4 em Alta Resolução](docs/diagrams/)
+- 🎨 [Infográficos de Arquitetura, SOLID e Design Patterns](docs/Infograficos/)

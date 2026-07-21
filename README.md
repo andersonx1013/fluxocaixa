@@ -10,16 +10,26 @@ Solução robusta e resiliente desenvolvida em **.NET 8** para gestão de lança
 
 ---
 
-## 📺 Como Rodar a Apresentação Interativa (Quick Start)
+## 🚀 Como Executar (Quick Start)
 
-O projeto conta com um **portal web interativo** (`http://127.0.0.1:4177`) que inicializa automaticamente os containers Docker, exibe a arquitetura C4, simuladores e permite executar testes ao vivo:
+### 1. Subir os Containers Docker
 
-### 🪟 No Windows (CMD ou PowerShell)
+Suba a infraestrutura backend (APIs, PostgreSQL, RabbitMQ e Redis) com o Docker Compose na raiz do projeto:
+
+```bash
+docker compose up -d --build
+```
+
+### 2. Abrir a Apresentação Interativa (Web HUD)
+
+Com os containers ativos, inicie o portal visual interativo (`http://127.0.0.1:4177`) para navegar pelos diagramas C4, simuladores e executar testes ao vivo:
+
+#### 🪟 No Windows (CMD ou PowerShell)
 ```cmd
 Iniciar-Apresentacao.cmd
 ```
 
-### 🐧 No Linux / macOS (Terminal Bash)
+#### 🐧 No Linux / macOS (Terminal Bash)
 ```bash
 chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
 ./docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
@@ -35,16 +45,6 @@ O sistema é composto por dois microsserviços desacoplados com bancos de dados 
 
 - **API Lançamentos (`:5101`)**: Processa criações, edições e exclusões de débitos/créditos. Persiste eventos na mesma transação via **Transactional Outbox**.
 - **API Consolidado (`:5102`)**: Projeção de leitura do saldo diário. Consome eventos de forma assíncrona com **Inbox Idempotente** e cache em **Redis**.
-
----
-
-## 🚀 Subindo Apenas os Containers (Docker Compose)
-
-Caso deseje subir apenas a infraestrutura backend sem a interface de apresentação visual:
-
-```bash
-docker compose up -d --build
-```
 
 ---
 

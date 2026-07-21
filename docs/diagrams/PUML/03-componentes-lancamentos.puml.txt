@@ -1,0 +1,31 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 3 - Componentes da API de Lancamentos
+
+Container_Boundary(api_lancamentos, "API de Lancamentos") {
+    Component(controller, "LancamentosController", "ASP.NET Core Controller", "Valida Autenticação (AUTHN JWT) e Autorização (AUTHZ) por Roles.")
+    Component(service, "LancamentoService", "Application Service", "Validacoes e orquestracao dos casos de uso.")
+    Component(entity, "Lancamento", "Entidade de Dominio", "Invariantes e estado do debito ou credito.")
+    Component(repository, "LancamentoRepository", "EF Core Repository", "Rastreia inclusao, alteracao e exclusao.")
+    Component(outbox_writer, "OutboxEventWriter", "Transactional Outbox", "Serializa o evento no mesmo DbContext do lancamento.")
+    Component(unit_of_work, "LancamentosUnitOfWork", "Unit of Work", "Confirma lancamento e evento em uma unica transacao.")
+    Component(dispatcher, "OutboxPublisherService", "BackgroundService", "Publica pendencias com MessageId estavel e publisher confirms; repete apos falhas.")
+}
+
+ContainerDb(db_lancamentos, "Banco de Lancamentos", "PostgreSQL 17", "Tabelas lancamentos e outbox_messages.")
+ContainerQueue(rabbitmq, "Broker de Eventos", "RabbitMQ 3.13", "Exchange, fila duravel e DLQ.")
+
+Rel(controller, service, "Executa caso de uso")
+Rel(service, entity, "Cria ou altera")
+Rel(service, repository, "Registra mudanca")
+Rel(service, outbox_writer, "Registra evento de integracao")
+Rel(service, unit_of_work, "Confirma transacao")
+Rel(repository, db_lancamentos, "Persiste")
+Rel(outbox_writer, db_lancamentos, "Persiste no Outbox")
+Rel(dispatcher, db_lancamentos, "Busca pendencias e marca publicadas")
+Rel(dispatcher, rabbitmq, "Publica com confirmacao", "AMQP")
+
+SHOW_LEGEND()
+@enduml

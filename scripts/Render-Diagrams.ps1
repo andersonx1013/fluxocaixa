@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
-$diagramPath = Join-Path $root "docs\diagrams"
+$diagramPath = Join-Path (Join-Path $root "docs") "diagrams"
 
 docker run --rm `
     -v "${diagramPath}:/workspace" `

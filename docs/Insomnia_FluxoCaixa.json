@@ -1,0 +1,240 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-07-20T08:30:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.6.1",
+  "resources": [
+    {
+      "_id": "wrk_fluxocaixa",
+      "parentId": null,
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "FluxoCaixa - API Lab",
+      "description": "Coleção de requisições referentes ao slide 7 (API Lab) do projeto FluxoCaixa.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1700000000000,
+      "preRequestScript": "const CryptoJS = require('crypto-js');\n\nfunction base64url(source) {\n  let encoded = CryptoJS.enc.Base64.stringify(source);\n  return encoded.replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');\n}\n\nconst secret = insomnia.environment.get('jwt_secret') || \"CarrefourFluxoCaixaSecretKey2024!@#$%\";\n\nconst header = {\n  alg: \"HS256\",\n  typ: \"JWT\"\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  sub: \"avaliador-local\",\n  name: \"Avaliador Local\",\n  role: \"comerciante\",\n  iss: \"FluxoCaixa\",\n  aud: \"FluxoCaixaAPI\",\n  iat: now,\n  nbf: now - 5,\n  exp: now + 3600,\n  jti: \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function(c) {\n    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  })\n};\n\nconst stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\nconst encodedHeader = base64url(stringifiedHeader);\n\nconst stringifiedPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload));\nconst encodedPayload = base64url(stringifiedPayload);\n\nconst tokenSubject = `${encodedHeader}.${encodedPayload}`;\nconst signature = CryptoJS.HmacSHA256(tokenSubject, secret);\nconst encodedSignature = base64url(signature);\n\nconst jwt = `${tokenSubject}.${encodedSignature}`;\n\ninsomnia.environment.set(\"token_jwt\", jwt);",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_local",
+      "parentId": "wrk_fluxocaixa",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "Ambiente Local",
+      "data": {
+        "base_url_lancamentos": "http://localhost:5101",
+        "base_url_consolidado": "http://localhost:5102",
+        "base_url_apresentacao": "http://localhost:4177",
+        "jwt_secret": "CarrefourFluxoCaixaSecretKey2024!@#$%",
+        "token_jwt": "AUTO_GENERATED_BY_SCRIPT"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url_lancamentos",
+          "base_url_consolidado",
+          "base_url_apresentacao",
+          "jwt_secret",
+          "token_jwt"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1700000000000,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_health",
+      "parentId": "wrk_fluxocaixa",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "1. Health Checks",
+      "description": "Requisições de verificação de saúde da infraestrutura.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1700000000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_health_l",
+      "parentId": "fld_health",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_lancamentos}}/health",
+      "name": "Health Lançamentos",
+      "description": "Verifica a saúde do microsserviço de Lançamentos e sua conexão com o PostgreSQL.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1700000000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_health_c",
+      "parentId": "fld_health",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_consolidado}}/health",
+      "name": "Health Consolidado",
+      "description": "Verifica a saúde do microsserviço de Consolidado, PostgreSQL e RabbitMQ.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1700000000000,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_lancamentos",
+      "parentId": "wrk_fluxocaixa",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "2. Lançamentos (Escrita)",
+      "description": "Operações de inclusão e consulta do microsserviço de Lançamentos.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1600000000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_credito",
+      "parentId": "fld_lancamentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_lancamentos}}/api/lancamentos",
+      "name": "Criar Lançamento (Crédito R$ 500)",
+      "description": "Adiciona um lançamento de crédito na API de Lançamentos.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": 2,\n  \"valor\": 500.00,\n  \"data\": \"2026-07-20\",\n  \"descricao\": \"Apresentação - crédito Insomnia\"\n}"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{token_jwt}}"
+      },
+      "metaSortKey": -1700000000000,
+      "preRequestScript": "const CryptoJS = require('crypto-js');\n\nfunction base64url(source) {\n  let encoded = CryptoJS.enc.Base64.stringify(source);\n  return encoded.replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');\n}\n\nconst secret = insomnia.environment.get('jwt_secret') || \"CarrefourFluxoCaixaSecretKey2024!@#$%\";\n\nconst header = {\n  alg: \"HS256\",\n  typ: \"JWT\"\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  sub: \"avaliador-local\",\n  name: \"Avaliador Local\",\n  role: \"comerciante\",\n  iss: \"FluxoCaixa\",\n  aud: \"FluxoCaixaAPI\",\n  iat: now,\n  nbf: now - 5,\n  exp: now + 3600,\n  jti: \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function(c) {\n    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  })\n};\n\nconst stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\nconst encodedHeader = base64url(stringifiedHeader);\n\nconst stringifiedPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload));\nconst encodedPayload = base64url(stringifiedPayload);\n\nconst tokenSubject = `${encodedHeader}.${encodedPayload}`;\nconst signature = CryptoJS.HmacSHA256(tokenSubject, secret);\nconst encodedSignature = base64url(signature);\n\nconst jwt = `${tokenSubject}.${encodedSignature}`;\n\ninsomnia.variables.set(\"token_jwt\", jwt);\ninsomnia.environment.set(\"token_jwt\", jwt);",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_debito",
+      "parentId": "fld_lancamentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_lancamentos}}/api/lancamentos",
+      "name": "Criar Lançamento (Débito R$ 125.50)",
+      "description": "Adiciona um lançamento de débito na API de Lançamentos.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": 1,\n  \"valor\": 125.50,\n  \"data\": \"2026-07-20\",\n  \"descricao\": \"Apresentação - débito Insomnia\"\n}"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{token_jwt}}"
+      },
+      "metaSortKey": -1600000000000,
+      "preRequestScript": "const CryptoJS = require('crypto-js');\n\nfunction base64url(source) {\n  let encoded = CryptoJS.enc.Base64.stringify(source);\n  return encoded.replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');\n}\n\nconst secret = insomnia.environment.get('jwt_secret') || \"CarrefourFluxoCaixaSecretKey2024!@#$%\";\n\nconst header = {\n  alg: \"HS256\",\n  typ: \"JWT\"\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  sub: \"avaliador-local\",\n  name: \"Avaliador Local\",\n  role: \"comerciante\",\n  iss: \"FluxoCaixa\",\n  aud: \"FluxoCaixaAPI\",\n  iat: now,\n  nbf: now - 5,\n  exp: now + 3600,\n  jti: \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function(c) {\n    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  })\n};\n\nconst stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\nconst encodedHeader = base64url(stringifiedHeader);\n\nconst stringifiedPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload));\nconst encodedPayload = base64url(stringifiedPayload);\n\nconst tokenSubject = `${encodedHeader}.${encodedPayload}`;\nconst signature = CryptoJS.HmacSHA256(tokenSubject, secret);\nconst encodedSignature = base64url(signature);\n\nconst jwt = `${tokenSubject}.${encodedSignature}`;\n\ninsomnia.variables.set(\"token_jwt\", jwt);\ninsomnia.environment.set(\"token_jwt\", jwt);",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_lancamentos",
+      "parentId": "fld_lancamentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_lancamentos}}/api/lancamentos",
+      "name": "Listar Lançamentos por Data",
+      "description": "Recupera todos os lançamentos criados no PostgreSQL para uma data específica.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "data",
+          "value": "2026-07-20"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{token_jwt}}"
+      },
+      "metaSortKey": -1500000000000,
+      "preRequestScript": "const CryptoJS = require('crypto-js');\n\nfunction base64url(source) {\n  let encoded = CryptoJS.enc.Base64.stringify(source);\n  return encoded.replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');\n}\n\nconst secret = insomnia.environment.get('jwt_secret') || \"CarrefourFluxoCaixaSecretKey2024!@#$%\";\n\nconst header = {\n  alg: \"HS256\",\n  typ: \"JWT\"\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  sub: \"avaliador-local\",\n  name: \"Avaliador Local\",\n  role: \"comerciante\",\n  iss: \"FluxoCaixa\",\n  aud: \"FluxoCaixaAPI\",\n  iat: now,\n  nbf: now - 5,\n  exp: now + 3600,\n  jti: \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function(c) {\n    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  })\n};\n\nconst stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\nconst encodedHeader = base64url(stringifiedHeader);\n\nconst stringifiedPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload));\nconst encodedPayload = base64url(stringifiedPayload);\n\nconst tokenSubject = `${encodedHeader}.${encodedPayload}`;\nconst signature = CryptoJS.HmacSHA256(tokenSubject, secret);\nconst encodedSignature = base64url(signature);\n\nconst jwt = `${tokenSubject}.${encodedSignature}`;\n\ninsomnia.variables.set(\"token_jwt\", jwt);\ninsomnia.environment.set(\"token_jwt\", jwt);",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_consolidado",
+      "parentId": "wrk_fluxocaixa",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "3. Consolidado (Leitura)",
+      "description": "Operações de consulta do saldo consolidado.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1500000000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_consult_consolidado",
+      "parentId": "fld_consolidado",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_consolidado}}/api/consolidado",
+      "name": "Consultar Consolidado por Data",
+      "description": "Consulta a projeção do consolidado diário na API de Consolidado.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "data",
+          "value": "2026-07-20"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{token_jwt}}"
+      },
+      "metaSortKey": -1700000000000,
+      "preRequestScript": "const CryptoJS = require('crypto-js');\n\nfunction base64url(source) {\n  let encoded = CryptoJS.enc.Base64.stringify(source);\n  return encoded.replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');\n}\n\nconst secret = insomnia.environment.get('jwt_secret') || \"CarrefourFluxoCaixaSecretKey2024!@#$%\";\n\nconst header = {\n  alg: \"HS256\",\n  typ: \"JWT\"\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  sub: \"avaliador-local\",\n  name: \"Avaliador Local\",\n  role: \"comerciante\",\n  iss: \"FluxoCaixa\",\n  aud: \"FluxoCaixaAPI\",\n  iat: now,\n  nbf: now - 5,\n  exp: now + 3600,\n  jti: \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function(c) {\n    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  })\n};\n\nconst stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\nconst encodedHeader = base64url(stringifiedHeader);\n\nconst stringifiedPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload));\nconst encodedPayload = base64url(stringifiedPayload);\n\nconst tokenSubject = `${encodedHeader}.${encodedPayload}`;\nconst signature = CryptoJS.HmacSHA256(tokenSubject, secret);\nconst encodedSignature = base64url(signature);\n\nconst jwt = `${tokenSubject}.${encodedSignature}`;\n\ninsomnia.variables.set(\"token_jwt\", jwt);\ninsomnia.environment.set(\"token_jwt\", jwt);",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_bff",
+      "parentId": "wrk_fluxocaixa",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "4. Simulação BFF",
+      "description": "Requisições para o backend Node.js da apresentação.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1400000000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_bff_demo",
+      "parentId": "fld_bff",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "url": "{{base_url_apresentacao}}/api/demo",
+      "name": "Executar Simulação Integrada",
+      "description": "Dispara a rotina Node.js do BFF que gera o JWT, cria o crédito + débito e faz o polling de consistência.",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1700000000000,
+      "_type": "request"
+    }
+  ]
+}

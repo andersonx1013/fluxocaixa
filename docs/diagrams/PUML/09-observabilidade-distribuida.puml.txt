@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 2/3 - Observabilidade Distribuida (Evolucao Enterprise)
+
+Person(comerciante, "Comerciante", "Gera requisicoes HTTP de lancamentos e consultas.")
+
+System_Boundary(fluxo_caixa, "Sistema de Fluxo de Caixa - Instrumentado") {
+    Container(api_lancamentos, "API de Lancamentos", ".NET 8 / OpenTelemetry SDK", "Coleta traces de requisicoes HTTP, tempos de commit do Outbox e logs estruturados em JSON (OTLP).")
+    ContainerDb(db_lancamentos, "Banco de Lancamentos", "PostgreSQL 17", "Métricas de conexões ativas e tempo de execução de transações.")
+
+    ContainerQueue(rabbitmq, "Broker de Eventos", "RabbitMQ 3.13", "Métricas de lag de fila, throughput de mensagens e taxa de ACK expostas via Prometheus Exporter.")
+
+    Container(api_consolidado, "API de Consolidado", ".NET 8 / OpenTelemetry SDK", "Mede latência de consumo de eventos, checagem de Inbox e taxa de Hit/Miss no Redis.")
+    ContainerDb(db_consolidado, "Banco de Consolidado", "PostgreSQL 17", "Métricas de agregação e persistência relacional de saldo.")
+    ContainerDb(redis, "Cache de Leitura", "Redis 7", "Métricas de memória, latência e Hit/Miss ratio.")
+}
+
+System_Boundary(observabilidade, "Plataforma de Observabilidade Centralizada") {
+    Container(otel_collector, "OpenTelemetry Collector", "OTel Collector Contrib", "Recebe logs, métricas e traces via OTLP (gRPC/HTTP), processa, filtra e distribui aos backends.")
+    Container(jaeger, "Jaeger / Tempo", "Distributed Tracing", "Visualização de traces ponta a ponta (TraceId propagado entre API Lancamentos, RabbitMQ e API Consolidado).")
+    Container(prometheus, "Prometheus / VictoriaMetrics", "Time-Series DB", "Coleta e armazena métricas registradas pelas APIs, bancos de dados e Lag de Fila do RabbitMQ.")
+    Container(grafana, "Grafana / Datadog", "Dashboards & Alertas", "Exibe SLOs, disponibilidade, latência p95/p99 e dispara alertas visuais caso o Lag de Fila ultrapasse o limite.")
+}
+
+Rel(comerciante, api_lancamentos, "Envia transações", "HTTP/JSON")
+Rel(comerciante, api_consolidado, "Consulta saldo", "HTTP/JSON")
+
+Rel(api_lancamentos, otel_collector, "Exporta Traces, Logs e Métricas", "OTLP / gRPC")
+Rel(api_consolidado, otel_collector, "Exporta Traces, Logs e Métricas", "OTLP / gRPC")
+Rel(rabbitmq, prometheus, "Expe métricas de Lag e throughput", "HTTP /metrics")
+
+Rel(otel_collector, jaeger, "Envia dados de Distributed Tracing", "gRPC")
+Rel(otel_collector, prometheus, "Envia séries temporais de métricas", "Prometheus Remote Write")
+Rel(prometheus, grafana, "Fornece dados para dashboards e alarmes", "PromQL")
+
+SHOW_LEGEND()
+@enduml

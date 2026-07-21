@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 2 - Containers do Sistema de Fluxo de Caixa
+
+Person(comerciante, "Comerciante", "Usa Swagger, curl ou outro cliente HTTP local.")
+
+System_Boundary(fluxo_caixa, "Sistema de Fluxo de Caixa - localhost") {
+    Container(api_lancamentos, "API de Lancamentos", ".NET 8 / ASP.NET Core", "CRUD de debitos e creditos. Grava o evento no Outbox na mesma transacao do lancamento.")
+    ContainerDb(db_lancamentos, "Banco de Lancamentos", "PostgreSQL 17", "Lancamentos e Outbox transacional.")
+
+    ContainerQueue(rabbitmq, "Broker de Eventos", "RabbitMQ 3.13", "Fila duravel, publisher confirms, single active consumer e DLQ.")
+
+    Container(api_consolidado, "API de Consolidado", ".NET 8 / ASP.NET Core", "Consome eventos de forma idempotente e serve o saldo diario.")
+    ContainerDb(db_consolidado, "Banco de Consolidado", "PostgreSQL 17", "Totais diarios e Inbox de mensagens processadas.")
+    ContainerDb(redis, "Cache de Leitura", "Redis 7", "Cache de consolidado por 5 minutos; PostgreSQL e usado como fallback.")
+}
+
+Rel(comerciante, api_lancamentos, "Cria, consulta, altera e exclui lancamentos", "JSON/HTTP + JWT")
+Rel(comerciante, api_consolidado, "Consulta o consolidado por data", "JSON/HTTP + JWT")
+Rel(api_lancamentos, db_lancamentos, "Le/escreve lancamento e Outbox atomicamente", "EF Core / TCP")
+Rel(api_lancamentos, rabbitmq, "Publica eventos pendentes em background", "AMQP / publisher confirms")
+Rel(rabbitmq, api_consolidado, "Entrega eventos; falhas permanentes seguem para DLQ", "AMQP / ack manual")
+Rel(api_consolidado, db_consolidado, "Atualiza consolidado e Inbox atomicamente", "EF Core / TCP")
+Rel(api_consolidado, redis, "Le, grava e invalida cache", "RESP / TCP")
+
+SHOW_LEGEND()
+@enduml

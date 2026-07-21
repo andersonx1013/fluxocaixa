@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 3 - Componentes da API de Consolidado
+
+Container_Boundary(api_consolidado, "API de Consolidado") {
+    Component(controller, "ConsolidadoController", "ASP.NET Core Controller", "Valida Autenticação (AUTHN JWT) e Autorização (AUTHZ) por Roles.")
+    Component(consumer, "RabbitMQEventConsumer", "BackgroundService", "Reconecta, desserializa, processa e confirma manualmente; rejeita mensagens invalidas para DLQ.")
+    Component(service, "ConsolidadoService", "Application Service", "Aplica criacao, exclusao e alteracao, inclusive mudanca entre datas.")
+    Component(entity, "ConsolidadoDiario", "Entidade de Dominio", "Calcula total de debitos, creditos e saldo final.")
+    Component(repository, "ConsolidadoRepository", "EF Core Repository", "Consulta e faz upsert do agregado diario.")
+    Component(inbox, "ProcessedMessageStore", "Idempotent Inbox", "Impede que o mesmo MessageId altere o saldo duas vezes.")
+    Component(unit_of_work, "ConsolidadoUnitOfWork", "Unit of Work", "Confirma consolidado e Inbox na mesma transacao.")
+    Component(cache, "RedisCacheService", "Cache-Aside", "TTL de 5 minutos e fallback transparente para PostgreSQL.")
+}
+
+ContainerQueue(rabbitmq, "Broker de Eventos", "RabbitMQ 3.13", "Fila duravel, single active consumer e DLQ.")
+ContainerDb(db_consolidado, "Banco de Consolidado", "PostgreSQL 17", "Tabelas consolidados_diarios e processed_messages.")
+ContainerDb(redis, "Cache de Leitura", "Redis 7", "Acelera consultas repetidas.")
+
+Rel(rabbitmq, consumer, "Entrega eventos", "AMQP")
+Rel(consumer, service, "Processa por MessageId")
+Rel(controller, service, "Consulta saldo")
+Rel(service, entity, "Aplica movimento")
+Rel(service, repository, "Consulta/atualiza")
+Rel(service, inbox, "Verifica/registra MessageId")
+Rel(service, unit_of_work, "Confirma transacao")
+Rel(service, cache, "Cache-aside e invalidacao")
+Rel(repository, db_consolidado, "Persiste")
+Rel(inbox, db_consolidado, "Persiste")
+Rel(cache, redis, "GET/SET/DEL", "RESP")
+
+SHOW_LEGEND()
+@enduml

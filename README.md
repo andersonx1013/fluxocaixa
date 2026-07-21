@@ -14,10 +14,25 @@ Validação executada em Windows + Docker Desktop em 18/07/2026:
 | Smoke test HTTP | aprovado |
 | Consolidado parado durante um lançamento | lançamento disponível e 0% de perda após recuperação |
 | RabbitMQ parado durante um lançamento | suportado por Transactional Outbox |
-| Carga no consolidado | 500/500 respostas, 49,86 req/s, 0% de perda |
-| Diagramas | 6 fontes PlantUML renderizadas e verificadas |
+| Carga no consolidado | 500/500 respostas, 49,99 req/s, 0% de perda |
+| Diagramas | 7 fontes PlantUML renderizadas e verificadas |
 
-O relatório reproduzível está em [`docs/relatorio-teste-carga-2026-07-18.md`](docs/relatorio-teste-carga-2026-07-18.md).
+O relatório reproduzível está em [`docs/relatorio-teste-carga-2026-07-18.md`](docs/relatorio-teste-carga-2026-07-18.md). As metas de produção, alertas e recuperação estão em [`docs/SLOS.md`](docs/SLOS.md).
+
+### Mapa da documentação
+
+| Artefato | Para que serve | Natureza |
+|---|---|---|
+| [`README.md`](README.md) | explica arquitetura, execução, APIs e testes | instrução principal |
+| [`docs/REQUISITOS.md`](docs/REQUISITOS.md) | liga cada requisito à implementação e à evidência | rastreabilidade |
+| [`docs/ADR.md`](docs/ADR.md) | registra decisões, motivos e trade-offs | decisão arquitetural |
+| [`docs/SLOS.md`](docs/SLOS.md) | define SLIs/SLOs, RTO/RPO, alertas e o que é dinâmico | metas operacionais |
+| [`docs/GLOSSARIO.md`](docs/GLOSSARIO.md) | explica siglas e expressões de domínio e tecnologia | dicionário de referência |
+| [`docs/relatorio-teste-carga-2026-07-18.md`](docs/relatorio-teste-carga-2026-07-18.md) | registra os resultados locais medidos | evidência pontual |
+| [`docs/diagrams`](docs/diagrams) | contém fontes PlantUML e imagens C4 | representação visual |
+| [`docs/ProvaBC_Carrefour_Apresentacao`](docs/ProvaBC_Carrefour_Apresentacao) | oferece apresentação interativa, PowerPoint e roteiro de estudo | material complementar |
+
+Os endpoints `/health/live`, `/health/ready` e `/health` mostram estado atual. Os scripts geram medições quando executados. SLOs mensais, alertas e RTO/RPO são metas da arquitetura-alvo e não dashboards ativos no Compose local.
 
 ## Arquitetura
 
@@ -33,6 +48,8 @@ O relatório reproduzível está em [`docs/relatorio-teste-carga-2026-07-18.md`]
 
 A consistência entre os serviços é **eventual**. Um `POST`, `PUT` ou `DELETE` pode levar alguns instantes para aparecer no consolidado.
 
+O Compose representa a implantação local executável. A topologia recomendada para produção, com balanceamento, réplicas, dados em alta disponibilidade, TLS, secret manager e observabilidade, está no [C4 de implantação](docs/diagrams/07-deployment-producao.png); esses componentes não são simulados nem exigem serviços de nuvem para executar a prova.
+
 ## Pré-requisitos
 
 - Docker Desktop com Docker Compose.
@@ -43,14 +60,46 @@ Nenhum Java é necessário. A renderização PlantUML também ocorre em um conta
 
 ## Início rápido
 
-No PowerShell, dentro da raiz do repositório:
+### 🚀 1. Subindo os Containers (Docker Compose)
 
+Você pode subir a infraestrutura completa (APIs, PostgreSQL, RabbitMQ e Redis) com um único comando cross-platform:
+
+#### 🪟 No Windows (PowerShell ou Prompt de Comando)
 ```powershell
 docker compose up -d --build
 docker compose ps
 ```
 
-### Isolamento Docker
+#### 🐧 No Linux / macOS (Terminal Bash)
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+---
+
+### 💻 2. Executando a Apresentação Interativa (Web HUD)
+
+O projeto conta com uma apresentação interativa em HTML/JS com estúdio de testes, simuladores e visualização dos diagramas C4 em `http://127.0.0.1:4177`.
+
+#### 🪟 No Windows:
+```cmd
+:: Executável direto
+Iniciar-Apresentacao.cmd
+
+:: Ou via PowerShell
+.\docs\ProvaBC_Carrefour_Apresentacao\Iniciar-Apresentacao.ps1
+```
+
+#### 🐧 No Linux / macOS:
+```bash
+chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
+./docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
+```
+
+---
+
+### 📦 Isolamento Docker
 
 O arquivo Compose fixa o projeto como `carrefour-fluxocaixa-prova`. Assim, mesmo sem informar `-p`, todos os recursos recebem um namespace exclusivo:
 
@@ -60,12 +109,13 @@ O arquivo Compose fixa o projeto como `carrefour-fluxocaixa-prova`. Assim, mesmo
 
 Nenhuma rede ou volume é declarado como `external`. Os comandos `down` e `down -v` atuam apenas nesse ambiente da prova e não alteram containers de outros projetos.
 
-A rede bridge é dedicada ao projeto e não é compartilhada com outros ambientes Docker. Todas as portas publicadas são vinculadas somente a `127.0.0.1`, sem exposição para a rede local da máquina; os containers só ingressariam em outra rede se isso fosse configurado explicitamente.
+A rede bridge é dedicada ao projeto e não é compartilhada com outros ambientes Docker. Todas as portas publicadas são vinculadas somente a `127.0.0.1`, sem exposição para a rede local da máquina.
 
-Serviços locais:
+Serviços locais ativos:
 
 | Serviço | Endereço |
 |---|---|
+| Apresentação Interativa | http://127.0.0.1:4177 |
 | Swagger Lançamentos | http://localhost:5101/swagger |
 | Swagger Consolidado | http://localhost:5102/swagger |
 | RabbitMQ Management | http://localhost:15674 (`guest` / `guest`) |
@@ -76,15 +126,15 @@ Serviços locais:
 
 O endpoint `/health` mostra todas as dependências, inclusive as degradáveis RabbitMQ/Redis. `/health/ready` representa a capacidade de atender requisições e exige apenas o banco obrigatório.
 
-Para encerrar sem apagar dados:
+#### Encerrando os Containers:
 
-```powershell
+Para encerrar sem apagar dados:
+```bash
 docker compose down
 ```
 
 Para reiniciar do zero, apagando exclusivamente os volumes deste projeto:
-
-```powershell
+```bash
 docker compose down -v
 docker compose up -d --build
 ```
@@ -149,8 +199,9 @@ Uma alteração que muda a data do lançamento reverte o total do dia antigo e a
 ## Testes reproduzíveis
 
 ```powershell
-# Unitários
+# Unitários e auditoria NuGet
 dotnet test FluxoCaixa.sln --configuration Release
+.\scripts\Test-Dependencies.ps1
 
 # CRUD e consolidação eventual
 .\scripts\Test-Smoke.ps1
@@ -180,6 +231,7 @@ O benchmark local comprova o requisito no ambiente medido, mas não substitui te
 | C4 Nível 3 - Consolidado | [`04-componentes-consolidado.png`](docs/diagrams/04-componentes-consolidado.png) | [`04-componentes-consolidado.puml`](docs/diagrams/04-componentes-consolidado.puml) |
 | C4 Nível 4 - Código | [`05-codigo.png`](docs/diagrams/05-codigo.png) | [`05-codigo.puml`](docs/diagrams/05-codigo.puml) |
 | Fluxo de resiliência | [`06-fluxo-resiliencia.png`](docs/diagrams/06-fluxo-resiliencia.png) | [`06-fluxo-resiliencia.puml`](docs/diagrams/06-fluxo-resiliencia.puml) |
+| C4 Deployment - Produção | [`07-deployment-producao.png`](docs/diagrams/07-deployment-producao.png) | [`07-deployment-producao.puml`](docs/diagrams/07-deployment-producao.puml) |
 
 As fontes usam a biblioteca C4 incluída no PlantUML (`<C4/...>`), sem download de includes remotos. Para regenerar todos os PNGs:
 
@@ -191,16 +243,16 @@ As fontes usam a biblioteca C4 incluída no PlantUML (`<C4/...>`), sem download 
 
 | Critério | Implementação/evidência |
 |---|---|
-| Escalabilidade | APIs stateless; leitura com Redis; índices por data; serviços e bancos separados |
+| Escalabilidade | APIs stateless; leitura com Redis; índices por data; serviços e bancos separados; topologia-alvo com balanceamento e 2+ réplicas |
 | Resiliência | Outbox, publisher confirms, fila durável, reconexão, Inbox, ack manual, DLQ, retries EF Core |
 | Disponibilidade | API de lançamentos sem dependência síncrona do consolidado ou broker; restart policy; liveness/readiness |
-| Segurança | JWT HS256, validação de issuer/audience/expiração/assinatura e policy da role `comerciante` |
-| Desempenho | cache-aside; meta de 50 req/s por 10 s, 49,86 req/s observadas e 0% de perda no teste local |
-| Observabilidade | logs estruturados e health checks por dependência |
+| Segurança | JWT HS256 local; arquitetura-alvo com TLS, OAuth2/OIDC, secret manager, rate limit, WAF e redes segmentadas |
+| Desempenho | cache-aside; meta de 50 req/s por 10 s, 49,99 req/s observadas e 0% de perda no teste local |
+| Observabilidade | logs estruturados e health checks locais; SLIs, alertas e telemetria correlacionada definidos para produção |
 | Confiabilidade | bancos por serviço; transações locais; idempotência por `MessageId` |
 | Supply chain | versões corrigidas, scan NuGet local e verificação no GitHub Actions |
 
-Metas e critérios completos estão em [`docs/REQUISITOS.md`](docs/REQUISITOS.md), e as decisões em [`docs/ADR.md`](docs/ADR.md).
+Metas e critérios completos estão em [`docs/REQUISITOS.md`](docs/REQUISITOS.md), os SLOs/RTO/RPO em [`docs/SLOS.md`](docs/SLOS.md), e as decisões em [`docs/ADR.md`](docs/ADR.md).
 
 ## Trade-offs e limites conscientes
 
@@ -209,7 +261,7 @@ Metas e critérios completos estão em [`docs/REQUISITOS.md`](docs/REQUISITOS.md
 - Redis melhora desempenho, mas não é fonte da verdade.
 - JWT local é adequado à prova offline; produção deve usar OAuth2/OIDC, rotação de chaves e HTTPS.
 - O schema usa `EnsureCreated` mais criação idempotente das tabelas auxiliares para facilitar a avaliação. Produção deve usar migrations versionadas.
-- Não foram implementados gateway, rate limit, tracing distribuído, dashboards nem CI/CD; estão descritos como evolução, não como funcionalidade existente.
+- Gateway, rate limit, tracing distribuído e dashboards pertencem à arquitetura-alvo documentada e não ao Compose local. O CI de build/teste/auditoria está definido; o deployment continua deliberadamente fora do escopo.
 
 ## Publicação no GitHub
 

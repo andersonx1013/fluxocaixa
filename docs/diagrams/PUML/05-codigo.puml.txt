@@ -1,0 +1,83 @@
+@startuml
+title C4 Nivel 4 - Codigo e Contratos Principais
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "FluxoCaixa.Lancamentos" {
+    class Lancamento {
+        +Id: Guid
+        +Tipo: TipoLancamento
+        +Valor: decimal
+        +Data: DateTime
+        +Atualizar(...)
+    }
+    class LancamentoService {
+        +RegistrarAsync(dto)
+        +AtualizarAsync(id, dto)
+        +ExcluirAsync(id)
+    }
+    interface ILancamentoRepository
+    interface IEventOutbox
+    interface IUnitOfWork
+    class OutboxEventWriter
+    class OutboxPublisherService
+    class OutboxMessage {
+        +Id: Guid
+        +RoutingKey: string
+        +Payload: jsonb
+        +ProcessadoEmUtc: DateTime?
+    }
+
+    LancamentoService --> Lancamento
+    LancamentoService --> ILancamentoRepository
+    LancamentoService --> IEventOutbox
+    LancamentoService --> IUnitOfWork
+    OutboxEventWriter ..|> IEventOutbox
+    OutboxEventWriter --> OutboxMessage
+    OutboxPublisherService --> OutboxMessage
+}
+
+package "FluxoCaixa.Shared" {
+    class LancamentoCriadoEvent
+    class LancamentoAtualizadoEvent {
+        +DataAntiga: DateTime
+        +DataNova: DateTime
+    }
+    class LancamentoExcluidoEvent
+}
+
+package "FluxoCaixa.Consolidado" {
+    class ConsolidadoDiario {
+        +Data: DateTime
+        +TotalDebitos: decimal
+        +TotalCreditos: decimal
+        +SaldoFinal: decimal
+        +AdicionarDebito(valor)
+        +AdicionarCredito(valor)
+    }
+    class ConsolidadoService
+    interface IConsolidadoRepository
+    interface IProcessedMessageStore
+    class ProcessedMessage {
+        +Id: string
+        +ProcessadoEmUtc: DateTime
+    }
+    class RabbitMQEventConsumer
+    class RedisCacheService
+
+    RabbitMQEventConsumer --> ConsolidadoService
+    ConsolidadoService --> ConsolidadoDiario
+    ConsolidadoService --> IConsolidadoRepository
+    ConsolidadoService --> IProcessedMessageStore
+    ConsolidadoService --> RedisCacheService
+    IProcessedMessageStore --> ProcessedMessage
+}
+
+LancamentoService ..> LancamentoCriadoEvent
+LancamentoService ..> LancamentoAtualizadoEvent
+LancamentoService ..> LancamentoExcluidoEvent
+RabbitMQEventConsumer ..> LancamentoCriadoEvent
+RabbitMQEventConsumer ..> LancamentoAtualizadoEvent
+RabbitMQEventConsumer ..> LancamentoExcluidoEvent
+@enduml

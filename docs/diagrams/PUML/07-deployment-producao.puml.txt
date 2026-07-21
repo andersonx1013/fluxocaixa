@@ -1,0 +1,82 @@
+@startuml
+!include <C4/C4_Deployment>
+LAYOUT_TOP_DOWN()
+
+title C4 Deployment - Escalabilidade Horizontal\n<size:14>CENARIO CONCEITUAL: nao executado no Docker Compose local</size>
+
+Person(comerciante, "Comerciante", "Registra lancamentos e consulta o consolidado.")
+System_Ext(orquestrador, "Orquestrador / Autoscaler", "CONCEITUAL: cria e remove replicas conforme carga, latencia e lag.")
+
+Deployment_Node(target, "CENARIO CONCEITUAL DE ESCALA HORIZONTAL", "Baseado no projeto FluxoCaixa desenvolvido") {
+    Deployment_Node(edge, "Camada de Entrada", "CONCEITUAL: 2+ instancias") {
+        Container(gateway, "API Gateway / Load Balancer", "TLS + health-aware routing", "Distribui comandos e consultas apenas para replicas com /health/ready saudavel.")
+    }
+
+    Deployment_Node(apps, "Cluster de Aplicacao", "CONCEITUAL: replicas distribuidas em 2+ nos") {
+        Deployment_Node(pool_lancamentos, "Pool de Lancamentos", "2+ replicas stateless") {
+            Container(api_l1, "Lancamentos API - Replica A", ".NET 8 + JWT", "Codigo atual: CRUD, validacao, readiness e gravacao transacional de Lancamento + Outbox.")
+            Container(api_l2, "Lancamentos API - Replica B", ".NET 8 + JWT", "Mesma imagem e configuracao; recebe trafego sem sticky session.")
+        }
+
+        Container(outbox_worker, "Outbox Publisher Coordenado", ".NET 8 Background Worker", "EVOLUCAO NECESSARIA: extrair ou coordenar o publisher atual com claim/lease (ex.: SKIP LOCKED).")
+
+        Deployment_Node(pool_consolidado, "Pool de Consolidado", "2+ replicas stateless") {
+            Container(api_c1, "Consolidado API - Replica A", ".NET 8 + JWT", "Leituras HTTP e consumidor RabbitMQ ativo; Inbox mantem idempotencia.")
+            Container(api_c2, "Consolidado API - Replica B", ".NET 8 + JWT", "Leituras HTTP; consumidor em standby para failover via Single Active Consumer.")
+        }
+    }
+
+    Deployment_Node(data, "Dependencias Compartilhadas", "CONCEITUAL: alta disponibilidade por tecnologia") {
+        ContainerDb(db_lancamentos, "PostgreSQL Lancamentos", "Primaria + standby + PITR", "Fonte da verdade de Lancamentos e Outbox.")
+        ContainerQueue(rabbitmq, "RabbitMQ", "3 nos + quorum queue + DLQ", "Publisher confirms, mensagens duraveis e Single Active Consumer.")
+        ContainerDb(db_consolidado, "PostgreSQL Consolidado", "Primaria + standby + PITR", "Fonte da verdade do saldo diario e Inbox.")
+        ContainerDb(redis, "Redis", "Primaria + replica + failover", "Cache-aside; PostgreSQL permanece como fallback.")
+    }
+}
+
+Rel(comerciante, gateway, "Usa as APIs", "HTTPS + JWT")
+Rel(gateway, api_l1, "Balanceia comandos", "HTTPS")
+Rel(gateway, api_l2, "Balanceia comandos", "HTTPS")
+Rel(gateway, api_c1, "Balanceia consultas", "HTTPS")
+Rel(gateway, api_c2, "Balanceia consultas", "HTTPS")
+
+Rel(api_l1, db_lancamentos, "Grava Lancamento + Outbox", "EF Core / TCP")
+Rel(api_l2, db_lancamentos, "Grava Lancamento + Outbox", "EF Core / TCP")
+Rel(outbox_worker, db_lancamentos, "Reserva pendencias com claim/lease", "EF Core / TCP")
+Rel(outbox_worker, rabbitmq, "Publica com publisher confirm", "AMQP")
+
+Rel(rabbitmq, api_c1, "Consumidor ativo", "AMQP + ACK manual")
+Rel(rabbitmq, api_c2, "Standby e failover", "Single Active Consumer")
+Rel(api_c1, db_consolidado, "Atualiza agregado + Inbox", "EF Core / TCP")
+Rel(api_c2, db_consolidado, "Atualiza agregado + Inbox apos failover", "EF Core / TCP")
+Rel(api_c1, redis, "Cache-aside", "RESP / TCP")
+Rel(api_c2, redis, "Cache-aside", "RESP / TCP")
+
+Rel(orquestrador, gateway, "Mantem replicas de entrada")
+Rel(orquestrador, api_l1, "Escala o pool de escrita")
+Rel(orquestrador, api_c1, "Escala o pool de leitura")
+
+note left of gateway
+  SOMENTE CONCEITUAL
+  Nao ha gateway, autoscaling ou
+  multiplas replicas no Compose local.
+end note
+
+note right of outbox_worker
+  BASE REAL DO PROJETO
+  Outbox transacional + publisher confirm.
+
+  AJUSTE PARA ESCALA
+  Claim/lease ou worker dedicado evita
+  publishers concorrentes na mesma linha.
+end note
+
+note bottom of api_c2
+  As duas replicas atendem leitura HTTP.
+  Para eventos, uma fica ativa por fila e
+  a outra assume no failover. Para aumentar
+  throughput, particionar por comerciante.
+end note
+
+SHOW_LEGEND()
+@enduml

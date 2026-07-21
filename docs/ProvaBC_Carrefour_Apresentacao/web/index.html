@@ -1,0 +1,1017 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05090d">
+  <title>FluxoCaixa // Apresentação Interativa</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="grid-plane"></div>
+    <div class="scanlines"></div>
+    <div class="flare flare-a"></div>
+    <div class="flare flare-b"></div>
+  </div>
+
+  <header class="hud">
+    <button class="brand" id="overviewButton" type="button" aria-label="Visão geral">
+      <span class="brand-mark">FC</span>
+      <span><strong>FLUXOCAIXA</strong><small>ARCHITECTURE BRIEFING</small></span>
+    </button>
+    <div class="hud-center">
+      <span class="scene-code" id="sceneCode">00 / 11</span>
+      <span class="scene-title" id="sceneTitle">Abertura</span>
+    </div>
+    <div class="hud-actions">
+      <button class="icon-button audio-toggle is-paused" id="bgMusicToggle" type="button" title="Música de fundo: Desativada" aria-label="Música de fundo">
+        <span class="audio-icon">🔇</span> <span class="audio-text">MÚSICA</span>
+      </button>
+      <button class="status-chip is-checking" id="liveStatus" type="button" title="Atualizar saúde">
+        <i></i><span>VERIFICANDO</span>
+      </button>
+      <button class="icon-button" id="studyButton" type="button" title="Modo resumos">RESUMOS</button>
+      <button class="icon-button" id="glossaryButton" type="button" title="Glossário">A–Z</button>
+      <button class="icon-button square" id="fullscreenButton" type="button" title="Tela cheia">⛶</button>
+    </div>
+  </header>
+
+  <div class="file-mode-notice" id="fileModeNotice" hidden>
+    <div>
+      <strong>MODO ARQUIVO</strong>
+      <span>A navegação funciona, mas testes e API Lab precisam do servidor local.</span>
+    </div>
+    <button id="openLocalhostButton" type="button">ABRIR LOCALHOST</button>
+  </div>
+
+  <main class="viewport" id="viewport">
+    <div class="world" id="world">
+      <article class="frame frame-profile" data-title="Apresentação" data-x="0" data-y="-1350" data-rotate="-1">
+        <div class="frame-head"><span>01</span><p>CONHEÇA O ARQUITETO</p></div>
+        <div class="profile-layout">
+          <div class="profile-sidebar">
+            <div class="profile-photo-wrapper">
+              <img src="Fotos/Eu Terno Harmonizado.png" alt="Anderson Xavier" class="profile-avatar">
+              <div class="photo-scan-bar"></div>
+            </div>
+            <div class="profile-meta">
+              <h2>Anderson Xavier</h2>
+              <p class="role-subtitle">Principal AI Engineer & Architect</p>
+              <div class="profile-contacts">
+                <span class="contact-item"><span class="icon">📍</span> São Paulo, Brasil</span>
+                <span class="contact-item"><span class="icon">📞</span> (+55) 16 99740-5919</span>
+                <a href="mailto:andersonx1013@gmail.com" class="contact-item"><span class="icon">✉️</span> andersonx1013@gmail.com</a>
+                <a href="https://www.linkedin.com/in/anderson-x-86a7b0254/" target="_blank" class="contact-item"><span class="icon">🔗</span> linkedin.com/in/anderson-x-86a7b0254</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="profile-main">
+            <div class="profile-canvas-container">
+              <canvas id="profile-canvas"></canvas>
+            </div>
+            <div class="profile-content-overlay">
+              <p class="kicker">PERFIL PROFISSIONAL // +20 ANOS DE EXPERIÊNCIA</p>
+              <h3>Liderança Técnica e Arquitetura AI-First</h3>
+              <p class="profile-lede"><strong>Líder técnico, Gerente de TI e Arquiteto de Software Principal</strong> com mais de 20 anos de experiência liderando equipes de engenharia e projetando ecossistemas distribuídos resilientes. Especialista na condução de times sob uma cultura <em>AI-First</em>, modernização de sistemas complexos e entrega de soluções de Inteligência Artificial Generativa em produção.</p>
+              
+              <div class="skills-section">
+                <div class="skill-group">
+                  <strong>AI & AGENTES</strong>
+                  <div class="skill-tags">
+                    <span>GenAI & LLMs (OpenAI, Gemini, Llama, Anthropic)</span>
+                    <span>LangGraph / LangChain / CrewAI / LlamaIndex</span>
+                    <span>Advanced RAG (Pinecone)</span>
+                    <span>Embeddings, Chunking & Re-ranking</span>
+                    <span>Tool Calling & Memory</span>
+                    <span>LLM Evaluation & Guardrails</span>
+                    <span>RASA</span>
+                    <span>n8n AI</span>
+                    <span>Fine-Tuning</span>
+                  </div>
+                </div>
+                <div class="skill-group">
+                  <strong>TECNOLOGIAS & CLOUD</strong>
+                  <div class="skill-tags">
+                    <span>Python</span>
+                    <span>Node.js</span>
+                    <span>.NET Core (C#)</span>
+                    <span>Go</span>
+                    <span>Java</span>
+                    <span>Azure (Main Cloud)</span>
+                    <span>AWS / GCP</span>
+                    <span>Docker & Kubernetes</span>
+                    <span>PostgreSQL / Redis</span>
+                    <span>SQL Server / Oracle / MongoDB</span>
+                    <span>Neo4J / ElasticSearch</span>
+                    <span>Event-Driven (Kafka)</span>
+                    <span>REST APIs & Webhooks</span>
+                    <span>R Studio (Anaconda)</span>
+                    <span>GeoServer</span>
+                  </div>
+                </div>
+                <div class="skill-group">
+                  <strong>LIDERANÇA & GESTÃO</strong>
+                  <div class="skill-tags">
+                    <span>Tech Leadership & IT Management</span>
+                    <span>Cultura AI-Augmented (Cursor/Copilot)</span>
+                    <span>Gestão Capex & Opex</span>
+                    <span>Modernização & Engenharia Reversa</span>
+                    <span>Agile / SAFe / Scrum Master</span>
+                    <span>DevSecOps (SonarQube)</span>
+                    <span>Keycloak (OAuth 2.0 / IAM)</span>
+                    <span>OWASP Top 10 & Compliance LGPD</span>
+                    <span>C4 Model</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> "Olá a todos! Sou Anderson Xavier. Tenho mais de 20 anos na área de engenharia de software e arquitetura. Hoje, meu foco principal está no desenvolvimento de agentes inteligentes e RAG corporativo para maximizar a produtividade e a resiliência operacional."</aside>
+      </article>
+
+      <article class="frame frame-cover" data-title="Abertura" data-x="0" data-y="0" data-rotate="0">
+        <div class="frame-grid cover-grid">
+          <div class="cover-copy">
+            <p class="kicker">BANCO CARREFOUR // DESAFIO TÉCNICO</p>
+            <h1>Uma arquitetura que<br><em>continua respirando</em><br>quando tudo falha.</h1>
+            <p class="lede">Fluxo de caixa em .NET 8, desenhado para desacoplar escrita, consolidação e recuperação.</p>
+            <div class="cover-actions">
+              <button class="primary-action" data-next>INICIAR BRIEFING</button>
+              <button class="ghost-action" data-overview>VER O MAPA</button>
+            </div>
+          </div>
+          <div class="reactor" aria-hidden="true">
+            <span class="orbit orbit-a"></span><span class="orbit orbit-b"></span><span class="orbit orbit-c"></span>
+            <strong>0%</strong><small>PERDA</small>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> “O desafio não é apenas cadastrar débitos e créditos. A pergunta central é: o sistema continua aceitando lançamentos quando o consolidado ou o broker falha?”</aside>
+      </article>
+
+      <article class="frame" data-title="O desafio real" data-x="1650" data-y="0" data-rotate="2">
+        <div class="frame-head"><span>03</span><p>MISSÃO</p></div>
+        <div class="split-hero">
+          <div>
+            <p class="kicker">O RISCO NÃO É CADASTRAR</p>
+            <h2>É continuar operando.</h2>
+            <p class="lede">Dois requisitos mudam toda a arquitetura: lançamentos não podem depender do consolidado, e a leitura deve suportar 50 req/s com perda máxima de 5%.</p>
+          </div>
+          <div class="metric-stack">
+            <div class="metric"><strong>50</strong><span>REQ/S</span><small>carga programada</small></div>
+            <div class="metric acid"><strong>0%</strong><span>PERDA</span><small>medida localmente</small></div>
+            <div class="metric"><strong>2</strong><span>SERVIÇOS</span><small>falhas independentes</small></div>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> conecte o requisito não funcional à decisão de separar os serviços. Evite começar pelas tecnologias.</aside>
+      </article>
+
+      <article class="frame frame-diagram" data-title="Decomposição" data-x="3300" data-y="150" data-rotate="-2">
+        <div class="frame-head"><span>04</span><p>ARQUITETURA</p></div>
+        <div class="diagram-layout">
+          <div class="diagram-copy">
+            <p class="kicker">DOIS RITMOS, DOIS LIMITES DE FALHA</p>
+            <h2>A escrita não espera a leitura.</h2>
+            <ul class="signal-list">
+              <li><b>Lançamentos</b><span>CRUD + PostgreSQL + Outbox</span></li>
+              <li><b>Mensageria</b><span>RabbitMQ durável + confirmações</span></li>
+              <li><b>Consolidado</b><span>Inbox + PostgreSQL + Redis</span></li>
+            </ul>
+          </div>
+          <button class="diagram-preview" data-diagram="02-container.png" aria-label="Ampliar C4 de containers">
+            <img src="/project-diagrams/02-container.png" alt="C4 de containers do FluxoCaixa">
+            <span>AMPLIAR C4 // NÍVEL 2</span>
+          </button>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> “Cada serviço possui seu banco. A integração é apenas por evento; nenhuma consulta síncrona atravessa a fronteira.”</aside>
+      </article>
+
+      <article class="frame frame-diagram" data-title="Resiliência" data-x="4950" data-y="0" data-rotate="3">
+        <div class="frame-head"><span>05</span><p>TRANSACTIONAL OUTBOX</p></div>
+        <div class="diagram-layout reverse">
+          <button class="diagram-preview" data-diagram="06-fluxo-resiliencia.png" aria-label="Ampliar fluxo de resiliência">
+            <img src="/project-diagrams/06-fluxo-resiliencia.png" alt="Fluxo de queda e recuperação do consolidado">
+            <span>AMPLIAR FLUXO // RECUPERAÇÃO</span>
+          </button>
+          <div class="diagram-copy">
+            <p class="kicker">A TRANSAÇÃO TERMINA ANTES DA INTEGRAÇÃO</p>
+            <h2>Confirmar primeiro.<br>Publicar depois.</h2>
+            <ol class="sequence-list">
+              <li><span>01</span>lançamento + evento no mesmo commit</li>
+              <li><span>02</span>publicador envia com publisher confirm</li>
+              <li><span>03</span>Inbox impede dupla contabilização</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> Outbox elimina a janela entre salvar o dado e publicar o evento. Inbox trata redelivery sem duplicar saldo.</aside>
+      </article>
+
+      <article class="frame frame-lab" data-title="Swagger ao vivo" data-x="5000" data-y="1650" data-rotate="88">
+        <div class="frame-head"><span>06</span><p>CONTRATO EXECUTÁVEL</p></div>
+        <div class="lab-layout">
+          <div>
+            <p class="kicker">ESTAÇÃO 01 // SWAGGER</p>
+            <h2>O contrato pode ser explorado agora.</h2>
+            <p class="lede compact">As duas APIs expõem documentação OpenAPI local. Use o token JWT do roteiro ou abra o laboratório guiado.</p>
+            <div class="action-stack">
+              <button class="primary-action" data-swagger="http://127.0.0.1:5101/swagger">SWAGGER LANÇAMENTOS <span>:5101</span></button>
+              <button class="primary-action cyan" data-swagger="http://127.0.0.1:5102/swagger">SWAGGER CONSOLIDADO <span>:5102</span></button>
+            </div>
+          </div>
+          <div class="contract-window">
+            <div class="window-bar"><i></i><i></i><i></i><span>OPENAPI // v1</span></div>
+            <div class="route-line post"><b>POST</b><code>/api/lancamentos</code><em>201</em></div>
+            <div class="route-line get"><b>GET</b><code>/api/lancamentos?data=</code><em>200</em></div>
+            <div class="route-line put"><b>PUT</b><code>/api/lancamentos/{id}</code><em>204</em></div>
+            <div class="route-line delete"><b>DEL</b><code>/api/lancamentos/{id}</code><em>204</em></div>
+            <div class="route-line get"><b>GET</b><code>/api/consolidado?data=</code><em>200</em></div>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> abra o Swagger de lançamentos, mostre o esquema e os códigos. Depois volte e execute o fluxo guiado no API Lab.</aside>
+      </article>
+
+      <article class="frame frame-terminal" data-title="Scripts ao vivo" data-x="3400" data-y="1800" data-rotate="2">
+        <div class="frame-head"><span>07</span><p>EVIDÊNCIA REPRODUZÍVEL</p></div>
+        <div class="terminal-layout">
+          <div class="test-selector">
+            <p class="kicker">ESTAÇÃO 02 // POWERSHELL</p>
+            <h2>Arquitetura comprovada em execução.</h2>
+            <button data-run-test="smoke">
+              <i></i>
+              <b>Smoke</b>
+              <span>CRUD, JWT e consistência</span>
+              <span class="info-btn" onclick="toggleDescription('smoke', event)">[ INFO ]</span>
+            </button>
+            <div class="test-desc-panel" id="desc-smoke">
+              <div class="test-desc-row"><strong>O que é:</strong><span>Teste rápido de sanidade do ecossistema e persistência.</span></div>
+              <div class="test-desc-row"><strong>Para que serve:</strong><span>Executa operações de CRUD de lançamentos, autenticação JWT e valida consistência eventual.</span></div>
+              <div class="test-desc-row"><strong>Propósito:</strong><span>Confirmar se os serviços essenciais estão ativos e se comunicando corretamente.</span></div>
+            </div>
+
+            <button data-run-test="resilience">
+              <i></i>
+              <b>Resiliência</b>
+              <span>consolidado offline</span>
+              <span class="info-btn" onclick="toggleDescription('resilience', event)">[ INFO ]</span>
+            </button>
+            <div class="test-desc-panel" id="desc-resilience">
+              <div class="test-desc-row"><strong>O que é:</strong><span>Validação de tolerância a falhas temporárias nos microsserviços.</span></div>
+              <div class="test-desc-row"><strong>Para que serve:</strong><span>Derruba o consolidado enquanto insere lançamentos, garantindo a autonomia da API de Lançamentos, e valida a sincronização pós-recuperação.</span></div>
+              <div class="test-desc-row"><strong>Propósito:</strong><span>Provar acoplamento fraco e garantir que quedas de componentes não causam perda de dados.</span></div>
+            </div>
+
+            <button data-run-test="outbox">
+              <i></i>
+              <b>Outbox</b>
+              <span>RabbitMQ offline</span>
+              <span class="info-btn" onclick="toggleDescription('outbox', event)">[ INFO ]</span>
+            </button>
+            <div class="test-desc-panel" id="desc-outbox">
+              <div class="test-desc-row"><strong>O que é:</strong><span>Garantia transacional de entrega de eventos.</span></div>
+              <div class="test-desc-row"><strong>Para que serve:</strong><span>Para o RabbitMQ e insere novos lançamentos, validando o registro local do evento na tabela de Outbox e reprocessamento posterior.</span></div>
+              <div class="test-desc-row"><strong>Propósito:</strong><span>Impedir inconsistências de dados causadas por falhas de rede ou no broker de mensageria.</span></div>
+            </div>
+
+            <button data-run-test="load">
+              <i></i>
+              <b>Carga</b>
+              <span>50 req/s por 10 s</span>
+              <span class="info-btn" onclick="toggleDescription('load', event)">[ INFO ]</span>
+            </button>
+            <div class="test-desc-panel" id="desc-load">
+              <div class="test-desc-row"><strong>O que é:</strong><span>Simulação de estresse de leitura paralela.</span></div>
+              <div class="test-desc-row"><strong>Para que serve:</strong><span>Dispara 50 requisições simultâneas de leitura por segundo (RPS) durante 10 segundos contra o consolidado.</span></div>
+              <div class="test-desc-row"><strong>Propósito:</strong><span>Assegurar que o microsserviço de consulta de saldos atenda a requisitos de desempenho sob forte concorrência.</span></div>
+            </div>
+
+            <button data-run-test="dependencies">
+              <i></i>
+              <b>Supply chain</b>
+              <span>auditoria NuGet</span>
+              <span class="info-btn" onclick="toggleDescription('dependencies', event)">[ INFO ]</span>
+            </button>
+            <div class="test-desc-panel" id="desc-dependencies">
+              <div class="test-desc-row"><strong>O que é:</strong><span>Varredura automatizada de segurança de dependências.</span></div>
+              <div class="test-desc-row"><strong>Para que serve:</strong><span>Executa auditoria nativa do dotnet para listar vulnerabilidades conhecidas (diretas/transitivas) no NuGet.</span></div>
+              <div class="test-desc-row"><strong>Propósito:</strong><span>Mitigar riscos de segurança trazidos por pacotes de terceiros no ecossistema da aplicação.</span></div>
+            </div>
+          </div>
+          <div class="terminal-shell">
+            <div class="terminal-top"><span>fluxocaixa://tests</span><b id="terminalState">PRONTO</b></div>
+            <pre id="testTerminal"><span class="prompt">PS C:\ProvaBC_Carrefour&gt;</span> selecione um teste para executar em tempo real.
+
+Somente scripts da lista permitida podem ser iniciados.</pre>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> execute Resiliência para provar o requisito principal. Use Carga se houver mais tempo.</aside>
+      </article>
+
+      <article class="frame frame-explorer" data-title="C4 navegável" data-x="1700" data-y="1700" data-rotate="-3">
+        <div class="frame-head"><span>08</span><p>DOCUMENTAÇÃO VIVA</p></div>
+        <div class="explorer-layout">
+          <div class="diagram-nav">
+            <p class="kicker">ESTAÇÃO 03 // C4 MODEL</p>
+            <h2>Uma decisão em cada nível.</h2>
+            <div id="diagramButtons" class="diagram-buttons"></div>
+            <p class="diagram-nav-hint">SELECIONE UM NÍVEL E CLIQUE NA IMAGEM PARA AMPLIAR.</p>
+          </div>
+          <button class="diagram-stage" id="diagramStage" type="button" aria-label="Abrir diagrama Contexto no visualizador">
+            <img id="diagramImage" src="/project-diagrams/01-contexto.png" alt="Diagrama C4 selecionado">
+            <span>AMPLIAR // VISUALIZADOR</span>
+          </button>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> contexto responde “quem usa”; containers mostram responsabilidades; componentes mostram padrões; deployment mostra a evolução de produção.</aside>
+      </article>
+
+      <article class="frame frame-api" data-title="API Lab" data-x="0" data-y="1650" data-rotate="1">
+        <div class="frame-head"><span>09</span><p>REQUEST LAB</p></div>
+        <div class="api-layout">
+          <div class="request-builder">
+            <p class="kicker">ESTAÇÃO 04 // POSTMAN-LIKE</p>
+            <h2 style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-right: 20px;">
+              <span>Da requisição ao saldo.</span>
+              <button id="openApiInfo" class="icon-info-btn" type="button" title="Explicar endpoints da API">i</button>
+            </h2>
+            
+            <div class="api-section">
+              <span class="section-title">Saúde das APIs</span>
+              <div class="request-actions">
+                <button data-api-action="lancamentosHealth" class="btn-api"><span class="badge get">GET</span> Health Lançamentos</button>
+                <button data-api-action="consolidadoHealth" class="btn-api"><span class="badge get">GET</span> Health Consolidado</button>
+              </div>
+            </div>
+            
+            <div class="api-section data-dependent">
+              <label class="date-label">DATA DE REFERÊNCIA <input id="apiDate" type="date"></label>
+              <span class="section-title">Consultas de Domínio</span>
+              <div class="request-actions">
+                <button data-api-action="listarLancamentos" class="btn-api" disabled><span class="badge get">GET</span> Listar Lançamentos</button>
+                <button data-api-action="consultarConsolidado" class="btn-api" disabled><span class="badge get">GET</span> Consolidado Diário</button>
+              </div>
+            </div>
+            
+            <div class="api-section demo-section">
+              <span class="section-title">Simulação Integrada</span>
+              <button class="primary-action full" id="runDemoButton">EXECUTAR FLUXO COMPLETO</button>
+              <p class="microcopy">Gera JWT em memória, cria crédito + débito e aguarda a consistência eventual.</p>
+              
+              <div id="demoStepper" class="stepper-container">
+                <div class="stepper-step" id="step-jwt">
+                  <span class="step-icon">○</span>
+                  <span class="step-text">Gerar Token JWT (Comerciante)</span>
+                </div>
+                <div class="stepper-step" id="step-credito">
+                  <span class="step-icon">○</span>
+                  <span class="step-text">Criar Lançamento Crédito (R$ 500,00)</span>
+                </div>
+                <div class="stepper-step" id="step-debito">
+                  <span class="step-icon">○</span>
+                  <span class="step-text">Criar Lançamento Débito (R$ 125,50)</span>
+                </div>
+                <div class="stepper-step" id="step-consolidado">
+                  <span class="step-icon">○</span>
+                  <span class="step-text">Aguardar Consistência Eventual</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="response-view">
+            <div class="response-meta"><span id="responseMethod">READY</span><b id="responseStatus">--</b><em id="responseTime">0 ms</em><button id="clearConsoleButton" type="button" style="background: transparent; border: 0; color: var(--muted); cursor: pointer; font: 9px 'Cascadia Code', monospace; letter-spacing: 0.08em; padding: 4px 8px; margin-left: auto;">[ LIMPAR CONSOLE ]</button></div>
+            <pre id="apiResponse">{
+  "mensagem": "Selecione uma chamada ou execute o fluxo completo."
+}</pre>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> clique em “Executar fluxo completo”. Explique que a resposta 201 vem antes da projeção e que o laboratório faz polling até o saldo convergir.</aside>
+      </article>
+
+      <article class="frame" data-title="Segurança" data-x="-1650" data-y="1700" data-rotate="-2">
+        <div class="frame-head"><span>10</span><p>SEGURANÇA EM CAMADAS</p></div>
+        <div class="security-layout">
+          <div>
+            <p class="kicker">LOCAL HONESTO. PRODUÇÃO EXPLÍCITA.</p>
+            <h2 style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-right: 20px;">
+              <span>Sem credencial mágica escondida.</span>
+              <button id="openSecurityInfo" class="icon-info-btn" type="button" title="Explicar conceitos de segurança">i</button>
+            </h2>
+            <p class="lede compact" style="margin-bottom: 12px;">A arquitetura implementa <strong>defesa em profundidade</strong>, onde a requisição atravessa 3 camadas de verificação:</p>
+            <ul class="security-defs" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 11px; line-height: 1.4; color: #c5d5d9;">
+              <li style="border-left: 2px solid var(--cyan); padding-left: 10px;">
+                <strong style="color: var(--cyan);">AUTHN (Autenticação):</strong>
+                <span>Identifica o usuário. Validado no middleware do ASP.NET Core via JWT HS256 offline nas APIs de Lançamentos e Consolidado.</span>
+                <div style="margin-top: 4px;"><a href="#4" class="sec-link" style="color: var(--cyan); text-decoration: underline; font-size: 10px; font-family: monospace;">[Ver no C4 Container (Slide 3)]</a></div>
+              </li>
+              <li style="border-left: 2px solid var(--acid); padding-left: 10px;">
+                <strong style="color: var(--acid);">AUTHZ (Autorização):</strong>
+                <span>Valida permissões de acesso. Aplicado via políticas e filtros nativos do ASP.NET Core antes de invocar a regra de negócio.</span>
+                <div style="margin-top: 4px;"><a href="#8-03" class="sec-link" style="color: var(--acid); text-decoration: underline; font-size: 10px; font-family: monospace;">[Ver Componentes no C4 Explorer (Slide 7)]</a></div>
+              </li>
+              <li style="border-left: 2px solid var(--orange); padding-left: 10px;">
+                <strong style="color: var(--orange);">ROLE (Papel):</strong>
+                <span>Restringe o acesso à Role <code>comerciante</code>. Exigido no atributo <code>[Authorize(Roles = "comerciante")]</code> dos controllers.</span>
+                <div style="margin-top: 4px;"><a href="#9" class="sec-link" style="color: var(--orange); text-decoration: underline; font-size: 10px; font-family: monospace;">[Testar Tokens no API Lab (Slide 8)]</a></div>
+              </li>
+            </ul>
+          </div>
+          <div class="security-rings">
+            <div><span>AUTHN</span><b>401</b></div>
+            <div><span>AUTHZ</span><b>403</b></div>
+            <div><span>ROLE</span><b>OK</b></div>
+          </div>
+        </div>
+        <div class="boundary-note"><b>DECISÃO CONSCIENTE</b><span>Não adicionar cloud apenas para simular produção; documentar o caminho de evolução e manter o teste reproduzível.</span></div>
+        <aside class="speaker-note"><strong>Resumo:</strong> diferencie o que está implementado localmente do que pertence à arquitetura-alvo.</aside>
+      </article>
+
+      <article class="frame" data-title="Desempenho" data-x="-3300" data-y="1750" data-rotate="3">
+        <div class="frame-head"><span>11</span><p>CAPACIDADE MEDIDA</p></div>
+        <div class="performance-layout">
+          <div class="hero-number"><span>49,99</span><small>REQ/S OBSERVADAS</small></div>
+          <div class="performance-copy">
+            <p class="kicker">500 REQUISIÇÕES // 500 SUCESSOS</p>
+            <h2>O requisito foi ensaiado, não presumido.</h2>
+            <div class="loss-meter"><span style="--value: 0%"></span><b>0% perda</b><em>limite 5%</em></div>
+            <p>Redis reduz a pressão de leitura; PostgreSQL continua atendendo quando o cache cai.</p>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> este é um benchmark local de aceitação, não certificação de capacidade de produção.</aside>
+      </article>
+
+      <article class="frame frame-diagram frame-scale" data-title="Escala horizontal" data-x="-3350" data-y="0" data-rotate="-3">
+        <div class="frame-head"><span>12</span><p>C4 DEPLOYMENT // CENÁRIO CONCEITUAL</p></div>
+        <div class="diagram-layout">
+          <div class="diagram-copy">
+            <p class="kicker">BASEADO NO PROJETO DESENVOLVIDO</p>
+            <h2 style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-right: 20px;">
+              <span>Como o FluxoCaixa escalaria.</span>
+              <button id="openScaleInfo" class="icon-info-btn" type="button" title="Explicar conceitos de escala horizontal">i</button>
+            </h2>
+            <div class="conceptual-badge"><b>SOMENTE CONCEITUAL</b><span>Não executado no Docker Compose local.</span></div>
+            <ul class="signal-list">
+              <li><b>Base real</b><span>.NET 8, JWT, readiness, Outbox/Inbox, RabbitMQ e Redis</span></li>
+              <li><b>Entrada</b><span>load balancer envia apenas para réplicas prontas</span></li>
+              <li><b>Escrita</b><span>2+ APIs e Outbox com claim/lease ou worker dedicado</span></li>
+              <li><b>Leitura</b><span>2+ APIs; consumidor ativo + standby via Single Active Consumer</span></li>
+              <li><b>Dados</b><span>PostgreSQL, RabbitMQ e Redis com réplicas e failover</span></li>
+            </ul>
+            <button class="ghost-action conceptual-sim-button" id="openScaleSimulation" type="button">SIMULAR COMPORTAMENTO</button>
+          </div>
+          <button class="diagram-preview" data-diagram="07-deployment-producao.png" aria-label="Ampliar C4 conceitual de escala horizontal">
+            <img src="/project-diagrams/07-deployment-producao.png" alt="C4 Deployment conceitual de escala horizontal">
+            <span>AMPLIAR C4 // ESCALA HORIZONTAL</span>
+          </button>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> “Este C4 é somente conceitual porque reproduzir uma topologia distribuída completa tomaria tempo desproporcional para a prova. Ele parte do código atual e mostra exatamente o que seria replicado, balanceado ou adaptado para escala horizontal.”</aside>
+      </article>
+
+      <article class="frame frame-evolution" data-title="Itens para evolução" data-x="-2500" data-y="-600" data-rotate="-1">
+        <div class="frame-head"><span>13</span><p>ITENS PARA EVOLUÇÃO</p></div>
+        <div class="evolution-layout">
+          <div class="evolution-intro">
+            <p class="kicker">PADRÃO ENTERPRISE // SUGESTÕES DE MELHORIAS FUTURAS</p>
+            <h2 style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-right: 20px;">
+              <span>Cenários de Apoio & Infraestrutura Física</span>
+              <button id="openEvolutionInfo" class="icon-info-btn" type="button" title="Explicar itens de evolução enterprise">i</button>
+            </h2>
+            <div class="conceptual-warning" style="display: flex; align-items: center; gap: 10px; padding: 6px 12px; border: 1px solid var(--orange); background: rgba(255, 107, 53, 0.12); color: #ffab85; font: 11px 'Cascadia Code', monospace; margin-bottom: 10px;">
+              <strong style="color: var(--orange);">⚠️ NÃO IMPLEMENTADO LOCALMENTE:</strong> <span>Estes 3 cenários são sugestões conceituais de melhorias futuras para elevar o sistema a um padrão enterprise em produção real.</span>
+            </div>
+            <p class="lede compact" style="max-width: 100%; font-size: 13.5px; margin-bottom: 10px;">Os diagramas atuais do projeto cobrem mais de 90% de toda a mecânica lógica e física essencial. Para uma futura evolução de produção de grande porte, propomos:</p>
+          </div>
+          <div class="evolution-cards">
+            <div class="evolution-card">
+              <div class="card-header">
+                <span class="card-badge cyan">01</span>
+                <h3>Observabilidade Distribuída</h3>
+              </div>
+              <p>Rastreabilidade ponta a ponta e telemetria em tempo real:</p>
+              <ul>
+                <li><b>OpenTelemetry:</b> Coleta de métricas, logs e traces nas APIs de Lançamentos e Consolidado.</li>
+                <li><b>Coletor Central:</b> Envio via OTLP para Jaeger (distributed tracing), Prometheus e Grafana.</li>
+                <li><b>Lag de Fila:</b> Alertas e monitoramento do atraso entre lançamento e consolidação no RabbitMQ.</li>
+              </ul>
+              <button class="ghost-action diagram-btn" data-diagram="09-observabilidade-distribuida.png">VER C4 OBSERVABILIDADE</button>
+            </div>
+
+            <div class="evolution-card">
+              <div class="card-header">
+                <span class="card-badge acid">02</span>
+                <h3>Segurança & Secrets</h3>
+              </div>
+              <p>Proteção perimetral e gestão dinâmica de segredos:</p>
+              <ul>
+                <li><b>WAF / API Gateway:</b> Inspeção de borda, TLS termination e mitigação DDoS.</li>
+                <li><b>Vault / Key Vault:</b> Obtenção de credenciais de banco e chaves JWT em runtime.</li>
+                <li><b>Zero Hardcoding:</b> Sem segredos estáticos no código ou appsettings dos contêineres.</li>
+              </ul>
+              <button class="ghost-action diagram-btn" data-diagram="10-seguranca-borda-secrets.png">VER C4 SEGURANÇA & SECRETS</button>
+            </div>
+
+            <div class="evolution-card">
+              <div class="card-header">
+                <span class="card-badge orange">03</span>
+                <h3>Esteira CI/CD & Auditoria DLQ</h3>
+              </div>
+              <p>Ciclo de implantação contínua e governança de falhas:</p>
+              <ul>
+                <li><b>Pipeline CI/CD:</b> Build .NET 8, scans (Trivy/Sonar) e deploy Blue/Green sem downtime.</li>
+                <li><b>Mecânica de DLQ:</b> Desvio automatizado de falhas para a Dead Letter Queue do RabbitMQ.</li>
+                <li><b>Replay Tool:</b> Ferramenta de apoio operacional para visualização e replay de mensagens mortas.</li>
+              </ul>
+              <button class="ghost-action diagram-btn" data-diagram="11-pipeline-cicd-dlq-audit.png">VER C4 PIPELINE & DLQ</button>
+            </div>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> "Importante: estes três diagramas e cenários não foram implementados no ambiente local. São sugestões conceituais de melhorias futuras para elevar o sistema ao padrão enterprise de alta maturidade em produção real."</aside>
+      </article>
+
+      <article class="frame frame-process" data-title="Arquitetura de Negócio" data-x="-1700" data-y="-1350" data-rotate="-2">
+        <div class="frame-head"><span>14</span><p>ARQUITETURA DE NEGÓCIO & PROCESSOS</p></div>
+        <div class="process-layout">
+          <div class="process-intro">
+            <p class="kicker">ARQUITETURA CORPORATIVA // TOGAF BUSINESS ARCHITECTURE</p>
+            <h2 style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-right: 20px;">
+              <span>A tecnologia a serviço da continuidade do negócio.</span>
+              <button id="openProcessInfo" class="icon-info-btn" type="button" title="Explicar arquitetura de negócio e processos">i</button>
+            </h2>
+            <div class="conceptual-warning" style="display: flex; align-items: center; gap: 10px; padding: 6px 12px; border: 1px solid var(--orange); background: rgba(255, 107, 53, 0.12); color: #ffab85; font: 11px 'Cascadia Code', monospace; margin-bottom: 10px;">
+              <strong style="color: var(--orange);">⚠️ NÃO IMPLEMENTADO LOCALMENTE:</strong> <span>Estes 3 cenários são sugestões conceituais de melhorias futuras para elevar o sistema a um padrão enterprise em produção real.</span>
+            </div>
+            <p class="lede compact" style="max-width: 100%; font-size: 13.5px; margin-bottom: 10px;">
+              Na perspectiva de <strong>Arquiteto Corporativo</strong>, o ecossistema <em>FluxoCaixa</em> não é apenas um conjunto de microsserviços técnicos, mas o motor de <strong>garantia transacional e resiliência financeira</strong> para a operação do comerciante.
+            </p>
+          </div>
+          <div class="process-cards">
+            <div class="process-card">
+              <div class="card-header">
+                <span class="card-badge cyan">01</span>
+                <h3>Processo de Fechamento de Caixa</h3>
+              </div>
+              <p class="card-desc">Jornada operacional e contábil do comerciante (BPMN):</p>
+              <ul class="process-list">
+                <li><b>01. Operação (PDV):</b> Lançamento diário de entradas (vendas) e saídas (despesas).</li>
+                <li><b>02. Apuração:</b> Conciliação em tempo real da posição de caixa do comerciante.</li>
+                <li><b>03. Contabilização:</b> Envio do fechamento diário para Tesouraria e Livro Razão ERP.</li>
+              </ul>
+              <div class="card-diagram-box">
+                <svg viewBox="0 0 340 130" class="process-svg">
+                  <rect width="340" height="130" fill="rgba(5, 12, 17, 0.6)" rx="4" stroke="rgba(33, 215, 255, 0.25)" stroke-width="1"/>
+                  <!-- Step 1: Comerciante -->
+                  <g transform="translate(8, 12)">
+                    <rect width="76" height="34" rx="3" fill="#0d1b2a" stroke="#21d7ff" stroke-width="1.2"/>
+                    <text x="38" y="16" fill="#21d7ff" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">1. OPERADOR</text>
+                    <text x="38" y="27" fill="#8fa3ad" font-family="sans-serif" font-size="7" text-anchor="middle">Caixa / PDV</text>
+                  </g>
+                  <path d="M 84 29 L 118 29" stroke="#21d7ff" stroke-width="1.5" marker-end="url(#arrowCyan)"/>
+                  
+                  <!-- Step 2: Conciliação -->
+                  <g transform="translate(118, 12)">
+                    <rect width="90" height="34" rx="3" fill="#14281d" stroke="#b8ff2c" stroke-width="1.2"/>
+                    <text x="45" y="16" fill="#b8ff2c" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">2. CONCILIAÇÃO</text>
+                    <text x="45" y="27" fill="#8fa3ad" font-family="sans-serif" font-size="7" text-anchor="middle">Apuração de Saldo</text>
+                  </g>
+                  <path d="M 163 46 L 163 76" stroke="#ff6b35" stroke-width="1.2" marker-end="url(#arrowOrange)"/>
+                  <text x="195" y="64" fill="#ff6b35" font-family="monospace" font-size="6.5">Fechamento Dia</text>
+                  
+                  <!-- Step 3: Tesouraria -->
+                  <g transform="translate(118, 76)">
+                    <rect width="90" height="34" rx="3" fill="#2b1704" stroke="#ff6b35" stroke-width="1.2"/>
+                    <text x="45" y="16" fill="#ff6b35" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">3. TESOURARIA</text>
+                    <text x="45" y="27" fill="#8fa3ad" font-family="sans-serif" font-size="7" text-anchor="middle">Gestão de Risco</text>
+                  </g>
+                  <path d="M 208 93 L 236 93" stroke="#21d7ff" stroke-width="1.5" marker-end="url(#arrowCyan)"/>
+                  
+                  <!-- Step 4: ERP -->
+                  <g transform="translate(236, 76)">
+                    <rect width="94" height="34" rx="3" fill="#0d1b2a" stroke="#21d7ff" stroke-width="1.2"/>
+                    <text x="47" y="16" fill="#21d7ff" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">4. ERP CONTÁBIL</text>
+                    <text x="47" y="27" fill="#8fa3ad" font-family="sans-serif" font-size="7" text-anchor="middle">Livro Razão Corporativo</text>
+                  </g>
+                  <defs>
+                    <marker id="arrowCyan" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M 0 0 L 5 2.5 L 0 5 z" fill="#21d7ff"/></marker>
+                    <marker id="arrowOrange" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M 0 0 L 5 2.5 L 0 5 z" fill="#ff6b35"/></marker>
+                  </defs>
+                </svg>
+              </div>
+              <button class="ghost-action diagram-btn" data-diagram="12-processo-e2e-bpmn.png" style="margin-top: 8px;">AMPLIAR PROCESSO BPMN (KROKI)</button>
+            </div>
+
+            <div class="process-card">
+              <div class="card-header">
+                <span class="card-badge acid">02</span>
+                <h3>Domínios Corporativos Carrefour</h3>
+              </div>
+              <p class="card-desc">Posicionamento da solução no ecossistema da empresa:</p>
+              <ul class="process-list">
+                <li><b>Domínio Comercial:</b> Frente de Loja, E-commerce e Faturamento.</li>
+                <li><b>Domínio Financeiro (FluxoCaixa):</b> Gestão de lançamentos e saldo diário.</li>
+                <li><b>Domínio ERP & BI:</b> Livro Razão contábil, fiscal e dashboards executivos.</li>
+              </ul>
+              <div class="card-diagram-box">
+                <svg viewBox="0 0 340 130" class="process-svg">
+                  <rect width="340" height="130" fill="rgba(5, 12, 17, 0.6)" rx="4" stroke="rgba(184, 255, 44, 0.25)" stroke-width="1"/>
+                  <g transform="translate(8, 8)">
+                    <rect width="324" height="34" rx="3" fill="rgba(255, 107, 53, 0.15)" stroke="#ff6b35" stroke-width="1"/>
+                    <circle cx="12" cy="17" r="4" fill="#ff6b35"/>
+                    <text x="22" y="15" fill="#ff6b35" font-family="monospace" font-size="8" font-weight="bold">DOMÍNIO COMERCIAL / PDV</text>
+                    <text x="22" y="26" fill="#c5d5d9" font-family="sans-serif" font-size="7">Frente de Loja • E-commerce • Captura de Vendas</text>
+                  </g>
+                  <g transform="translate(8, 48)">
+                    <rect width="324" height="34" rx="3" fill="rgba(184, 255, 44, 0.12)" stroke="#b8ff2c" stroke-width="1"/>
+                    <circle cx="12" cy="17" r="4" fill="#b8ff2c"/>
+                    <text x="22" y="15" fill="#b8ff2c" font-family="monospace" font-size="8" font-weight="bold">DOMÍNIO FINANCEIRO (SOLUÇÃO FLUXOCAIXA)</text>
+                    <text x="22" y="26" fill="#c5d5d9" font-family="sans-serif" font-size="7">Gestão de Lançamentos • Saldo Diário em Tempo Real</text>
+                  </g>
+                  <g transform="translate(8, 88)">
+                    <rect width="324" height="34" rx="3" fill="rgba(33, 215, 255, 0.12)" stroke="#21d7ff" stroke-width="1"/>
+                    <circle cx="12" cy="17" r="4" fill="#21d7ff"/>
+                    <text x="22" y="15" fill="#21d7ff" font-family="monospace" font-size="8" font-weight="bold">DOMÍNIO CORPORATIVO / ERP &amp; BI</text>
+                    <text x="22" y="26" fill="#c5d5d9" font-family="sans-serif" font-size="7">ERP SAP Contábil • Livro Razão • Dashboards de Tesouraria</text>
+                  </g>
+                </svg>
+              </div>
+              <button class="ghost-action diagram-btn" data-diagram="13-mapa-capacidades.png" style="margin-top: 8px;">AMPLIAR DOMÍNIOS (KROKI)</button>
+            </div>
+
+            <div class="process-card">
+              <div class="card-header">
+                <span class="card-badge orange">03</span>
+                <h3>Governança & Risco de Negócio (BIA)</h3>
+              </div>
+              <p class="card-desc">Matriz de impacto operacional e tolerância a falhas:</p>
+              <ul class="process-list">
+                <li><b>Criticidade Vital (Caixa):</b> Zero downtime no PDV (Risco de faturamento).</li>
+                <li><b>Criticidade Média (Saldo):</b> Tolerância de minutos (Risco informativo).</li>
+                <li><b>Criticidade Diferida (ERP):</b> Processamento em lote noturno (Batch).</li>
+              </ul>
+              <div class="card-diagram-box">
+                <svg viewBox="0 0 340 130" class="process-svg">
+                  <rect width="340" height="130" fill="rgba(5, 12, 17, 0.6)" rx="4" stroke="rgba(255, 107, 53, 0.25)" stroke-width="1"/>
+                  <g transform="translate(8, 8)">
+                    <rect width="324" height="32" rx="3" fill="rgba(255, 107, 53, 0.15)" stroke="#ff6b35" stroke-width="1"/>
+                    <text x="10" y="15" fill="#ff6b35" font-family="monospace" font-size="8" font-weight="bold">1. CRITICIDADE VITAL (Continuidade de Vendas)</text>
+                    <text x="10" y="25" fill="#8fa3ad" font-family="sans-serif" font-size="7">Operação de Caixa &amp; PDV | SLA Zero Downtime</text>
+                  </g>
+                  <path d="M 170 40 L 170 48" stroke="#b8ff2c" stroke-width="1.2" stroke-dasharray="2,2"/>
+                  <g transform="translate(8, 48)">
+                    <rect width="324" height="32" rx="3" fill="rgba(184, 255, 44, 0.12)" stroke="#b8ff2c" stroke-width="1"/>
+                    <text x="10" y="15" fill="#b8ff2c" font-family="monospace" font-size="8" font-weight="bold">2. CRITICIDADE MÉDIA (Apoio à Decisão)</text>
+                    <text x="10" y="25" fill="#8fa3ad" font-family="sans-serif" font-size="7">Consulta de Saldo Consolidado | Tolerância de Minutos</text>
+                  </g>
+                  <path d="M 170 80 L 170 88" stroke="#21d7ff" stroke-width="1.2" stroke-dasharray="2,2"/>
+                  <g transform="translate(8, 88)">
+                    <rect width="324" height="32" rx="3" fill="rgba(33, 215, 255, 0.15)" stroke="#21d7ff" stroke-width="1"/>
+                    <text x="10" y="15" fill="#21d7ff" font-family="monospace" font-size="8" font-weight="bold">3. CRITICIDADE DIFERIDA (Fechamento Fiscal)</text>
+                    <text x="10" y="25" fill="#8fa3ad" font-family="sans-serif" font-size="7">Integração Contábil ERP | Processamento Batch Noturno</text>
+                  </g>
+                </svg>
+              </div>
+              <button class="ghost-action diagram-btn" data-diagram="14-ritmos-negocio-pace-layered.png" style="margin-top: 8px;">AMPLIAR IMPACTO (KROKI)</button>
+            </div>
+          </div>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> "Como Arquiteto Corporativo, este slide conecta a solução técnica à cadeia de valor do comerciante. A separação dos serviços não é apenas um padrão técnico de microsserviços, mas uma decisão estratégica para garantir que a operação de venda do comerciante continue respirando sem interrupção mesmo se os sistemas analíticos falharem."</aside>
+      </article>
+
+      <article class="frame frame-close" data-title="Conclusão" data-x="-1650" data-y="0" data-rotate="2">
+        <div class="frame-head"><span>15</span><p>CONCLUSÃO</p></div>
+        <div class="close-layout">
+          <div>
+            <p class="kicker">A ARQUITETURA RESPONDE AO RISCO</p>
+            <h2>Disponível para escrever.<br>Confiável para consolidar.<br><em>Mensurável para evoluir.</em></h2>
+          </div>
+          <div class="proof-list">
+            <p><i></i><b>23/23</b><span>testes unitários</span></p>
+            <p><i></i><b>0%</b><span>perda nos cenários</span></p>
+            <p><i></i><b>11</b><span>diagramas C4/fluxo</span></p>
+            <p><i></i><b>0</b><span>pacotes vulneráveis</span></p>
+          </div>
+        </div>
+        <div class="final-actions">
+          <button class="primary-action" data-overview>REVISITAR O MAPA</button>
+          <button class="ghost-action" id="openQuestions">PERGUNTAS PARA TREINO</button>
+        </div>
+        <aside class="speaker-note"><strong>Resumo:</strong> volte à pergunta inicial. O serviço de lançamentos continua aceitando trabalho durante a queda do consolidado e do broker, com convergência após recuperação.</aside>
+      </article>
+    </div>
+  </main>
+
+  <nav class="scene-nav" aria-label="Navegação da apresentação">
+    <button id="prevButton" type="button" aria-label="Cena anterior">←</button>
+    <button id="footerMapButton" class="footer-map-button" type="button" aria-label="Ver mapa da apresentação">
+      <span aria-hidden="true">◇</span><b>MAPA</b>
+    </button>
+    <span id="footerSceneCounter" class="footer-scene-counter" aria-live="polite">01 / 12</span>
+    <div id="sceneDots"></div>
+    <button id="nextButton" type="button" aria-label="Próxima cena">→</button>
+  </nav>
+
+  <div class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navegar <kbd>O</kbd> mapa <kbd>E</kbd> resumos</div>
+
+  <dialog id="mediaDialog" class="media-dialog">
+    <div class="dialog-head"><span id="dialogTitle">VISUALIZAÇÃO</span><button id="closeDialog" type="button">FECHAR ×</button></div>
+    <div id="dialogContent" class="dialog-content"></div>
+  </dialog>
+
+  <template id="scaleSimulationTemplate">
+    <section class="scale-simulation" data-scale-state="normal">
+      <header class="simulation-intro">
+        <div>
+          <p class="kicker">BALANCEAMENTO // ESCALA HORIZONTAL</p>
+          <h2>Observe a rota, não uma infraestrutura real.</h2>
+        </div>
+        <div class="simulation-controls" role="group" aria-label="Cenário da simulação">
+          <button class="is-active" type="button" data-scale-mode="normal" aria-pressed="true">NORMAL</button>
+          <button type="button" data-scale-mode="peak" aria-pressed="false">SIMULAR PICO</button>
+          <button type="button" data-scale-mode="failure" aria-pressed="false">SIMULAR FALHA</button>
+        </div>
+      </header>
+
+      <div class="simulation-warning">
+        <b>SIMULAÇÃO VISUAL CONCEITUAL</b>
+        <span>Não provisiona réplicas, não chama as APIs e não representa infraestrutura executada no Docker Compose local.</span>
+      </div>
+
+      <div class="simulation-board" aria-live="polite">
+        <div class="simulation-state"><i></i><span data-scale-field="state">CAPACIDADE ESTÁVEL</span></div>
+        <div class="simulation-flow">
+          <div class="simulation-node simulation-source">
+            <small>ENTRADA</small>
+            <strong data-scale-field="incoming">50 RPS</strong>
+            <span>requisições HTTP</span>
+          </div>
+          <div class="simulation-link"><span></span></div>
+          <div class="simulation-node simulation-balancer">
+            <small>GATEWAY / LB</small>
+            <strong data-scale-field="routes">2 ROTAS</strong>
+            <span>somente readiness OK</span>
+          </div>
+          <div class="simulation-link"><span></span></div>
+          <div class="simulation-replicas">
+            <article class="simulation-replica is-online" data-scale-replica="0">
+              <i></i><b>API 01</b><span data-replica-field="status">READY</span><strong data-replica-field="load">25 RPS</strong>
+            </article>
+            <article class="simulation-replica is-online" data-scale-replica="1">
+              <i></i><b>API 02</b><span data-replica-field="status">READY</span><strong data-replica-field="load">25 RPS</strong>
+            </article>
+            <article class="simulation-replica is-standby" data-scale-replica="2">
+              <i></i><b>API 03</b><span data-replica-field="status">STANDBY</span><strong data-replica-field="load">0 RPS</strong>
+            </article>
+          </div>
+        </div>
+
+        <div class="simulation-metrics">
+          <p><strong data-scale-field="active">2 / 3</strong><span>RÉPLICAS ATIVAS</span></p>
+          <p><strong data-scale-field="routed">50 RPS</strong><span>TRÁFEGO ROTEADO</span></p>
+          <p><strong data-scale-field="scenario">NORMAL</strong><span>ESTADO VISUAL</span></p>
+        </div>
+      </div>
+
+      <footer class="simulation-caveat">
+        <b>ANTES DE ESCALAR DE VERDADE</b>
+        <span>Lançamentos exige claim/lease na Outbox ou worker dedicado. Consolidado mantém um consumidor ativo e outro standby por fila via Single Active Consumer.</span>
+      </footer>
+    </section>
+  </template>
+
+  <aside class="glossary-drawer" id="securityInfoDrawer" aria-hidden="true" style="border-left: 1px solid var(--cyan);">
+    <div class="drawer-head">
+      <div>
+        <small style="color: var(--cyan); font-family: monospace; letter-spacing: 0.2em;">CONCEITOS DE SEGURANÇA</small>
+        <h3 style="margin: 4px 0 20px; font-size: 28px;">Analogia Prática</h3>
+      </div>
+      <button id="closeSecurityInfo">×</button>
+    </div>
+    <div class="security-info-content" style="margin-top: 20px; overflow-y: auto; height: calc(100% - 100px); padding-bottom: 24px; font-size: 12px; line-height: 1.6; color: #c5d5d9; display: flex; flex-direction: column; gap: 20px;">
+      <p style="margin: 0; color: #8fa3ad; font-size: 13px;">Para compreender de forma simples a nossa segurança em camadas, imagine como funciona a portaria e o acesso de um <strong>prédio comercial moderno</strong>:</p>
+      
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 13px; text-transform: uppercase; font-family: monospace;">🔑 AUTHN (Autenticação)</h4>
+        <p style="margin: 0;"><strong>A Portaria do Prédio</strong><br>
+        É onde você prova <strong>quem você é</strong>. O porteiro olha seu documento de identidade e valida que você é realmente o Anderson Xavier. Se falhar na identificação, você é barrado com um erro <strong>401 Unauthorized</strong> (Não Autenticado).</p>
+      </div>
+
+      <div style="border-left: 2px solid #fff; padding-left: 12px;">
+        <h4 style="color: #fff; margin: 0 0 4px; font-size: 13px; text-transform: uppercase; font-family: monospace;">🎟️ JWT (JSON Web Token)</h4>
+        <p style="margin: 0;"><strong>O Crachá do Visitante</strong><br>
+        Depois de provar quem você é na portaria, você recebe um crachá de acesso oficial. Esse crachá tem seus dados (claims) e um carimbo holográfico infalsificável (a assinatura offline). Qualquer segurança do prédio pode ver o crachá e validar sua integridade imediatamente sem precisar ligar para a recepção.</p>
+      </div>
+
+      <div style="border-left: 2px solid var(--acid); padding-left: 12px;">
+        <h4 style="color: var(--acid); margin: 0 0 4px; font-size: 13px; text-transform: uppercase; font-family: monospace;">🚪 AUTHZ (Autorização)</h4>
+        <p style="margin: 0;"><strong>As Catracas Internas</strong><br>
+        Diz respeito ao que você <strong>tem direito de fazer</strong>. Mesmo portando um crachá legítimo (autenticado), se você tentar entrar no laboratório de TI sem ter essa permissão programada no crachá, a catraca trava e bloqueia sua entrada com o erro <strong>403 Forbidden</strong> (Acesso Proibido).</p>
+      </div>
+
+      <div style="border-left: 2px solid var(--orange); padding-left: 12px;">
+        <h4 style="color: var(--orange); margin: 0 0 4px; font-size: 13px; text-transform: uppercase; font-family: monospace;">🏷️ ROLE (Papel / Perfil)</h4>
+        <p style="margin: 0;"><strong>O Cargo Impresso no Crachá</strong><br>
+        Em vez de programar cada fechadura eletrônica para cada pessoa do prédio individualmente, o prédio cria perfis como "Comerciante". Se a catraca exige a Role de comerciante, só entra quem tem esse papel carimbado no crachá. Na API, usamos o atributo <code>[Authorize(Roles = "comerciante")]</code> nos controllers para esse bloqueio direto.</p>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="glossary-drawer" id="apiInfoDrawer" aria-hidden="true" style="border-left: 1px solid var(--cyan); width: 480px; max-width: 90vw;">
+    <div class="drawer-head">
+      <div>
+        <small style="color: var(--cyan); font-family: monospace; letter-spacing: 0.2em;">GUIA DE USO</small>
+        <h3 style="margin: 4px 0 20px; font-size: 26px;">Laboratório de APIs</h3>
+      </div>
+      <button id="closeApiInfo">×</button>
+    </div>
+    <div class="security-info-content" style="margin-top: 20px; overflow-y: auto; height: calc(100% - 100px); padding-bottom: 24px; font-size: 11px; line-height: 1.5; color: #c5d5d9; display: flex; flex-direction: column; gap: 20px;">
+      <p style="margin: 0; color: #8fa3ad; font-size: 12px;">Compreenda o propósito e funcionamento de cada uma das ações disponíveis na estação interativa:</p>
+      
+      <!-- ITEM 1: Health Lançamentos -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">🟢 GET Health Lançamentos</h4>
+        <p style="margin: 0 0 6px; font-family: 'Cascadia Code', monospace; font-size: 10px; color: var(--muted);">/health/ready (Porta 5101)</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Verificação de integridade (Health Check) do microsserviço de Lançamentos.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Avaliar o estado da API de escrita e sua conexão obrigatória com o banco de dados PostgreSQL.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Indicar ao orquestrador ou balanceador se o microsserviço está saudável para continuar recebendo novas gravações de lançamentos.</p>
+      </div>
+
+      <!-- ITEM 2: Health Consolidado -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">🟢 GET Health Consolidado</h4>
+        <p style="margin: 0 0 6px; font-family: 'Cascadia Code', monospace; font-size: 10px; color: var(--muted);">/health/ready (Porta 5102)</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Verificação de integridade (Health Check) do microsserviço de Consolidado.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Avaliar a saúde da API de leitura de saldos, verificando sua conexão com o banco Postgres e a integridade do cache no Redis.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Garantir que as consultas de saldos consolidados diários estejam prontas e saudáveis para responder requisições.</p>
+      </div>
+
+      <!-- ITEM 3: Listar Lançamentos -->
+      <div style="border-left: 2px solid #fff; padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: #fff; margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">📋 GET Listar Lançamentos</h4>
+        <p style="margin: 0 0 6px; font-family: 'Cascadia Code', monospace; font-size: 10px; color: var(--muted);">/api/lancamentos?data=YYYY-MM-DD</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Consulta direta ao banco de dados relacional (PostgreSQL) do domínio de Lançamentos.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Recuperar a lista detalhada de créditos e débitos individuais criados na data selecionada.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Permitir a auditoria detalhada dos lançamentos originais e a visualização do extrato analítico daquele dia.</p>
+      </div>
+
+      <!-- ITEM 4: Consolidado Diário -->
+      <div style="border-left: 2px solid var(--acid); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--acid); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">💰 GET Consolidado Diário</h4>
+        <p style="margin: 0 0 6px; font-family: 'Cascadia Code', monospace; font-size: 10px; color: var(--muted);">/api/consolidado?data=YYYY-MM-DD</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Consulta ao agregado (consolidado) de saldo financeiro para a data de referência.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Obter o saldo acumulado, somatório de créditos e débitos de forma rápida, com apoio de cache no Redis.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Disponibilizar a posição de caixa em tempo real ao comerciante com alta velocidade e baixa latência de leitura.</p>
+      </div>
+
+      <!-- ITEM 5: Executar Fluxo Completo -->
+      <div style="border-left: 2px solid var(--orange); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--orange); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">⚡ Simulação Integrada</h4>
+        <p style="margin: 0 0 6px; font-family: 'Cascadia Code', monospace; font-size: 10px; color: var(--muted);">EXECUTAR FLUXO COMPLETO (Fluxo em Lote)</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Fluxo automatizado e interativo que simula toda a jornada transacional do comerciante localmente.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Executar em lote: geração do token JWT, inserção de um crédito, inserção de um débito e polling do saldo consolidado até que a consistência eventual seja alcançada no cache.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Demonstrar visualmente e atestar em tempo real a integração assíncrona baseada em eventos (RabbitMQ) e a convergência correta de dados entre os microsserviços.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- DRAWER SLIDE 12: Escala Horizontal -->
+  <aside class="glossary-drawer" id="scaleInfoDrawer" aria-hidden="true" style="border-left: 1px solid var(--cyan); width: 480px; max-width: 90vw;">
+    <div class="drawer-head">
+      <div>
+        <small style="color: var(--cyan); font-family: monospace; letter-spacing: 0.2em;">C4 DEPLOYMENT // GUIA</small>
+        <h3 style="margin: 4px 0 20px; font-size: 26px;">Escala Horizontal</h3>
+      </div>
+      <button id="closeScaleInfo">×</button>
+    </div>
+    <div class="security-info-content" style="margin-top: 20px; overflow-y: auto; height: calc(100% - 100px); padding-bottom: 24px; font-size: 11px; line-height: 1.5; color: #c5d5d9; display: flex; flex-direction: column; gap: 20px;">
+      <p style="margin: 0; color: #8fa3ad; font-size: 12px;">Detalhamento conceitual de cada um dos 5 pilares do C4 Deployment em produção:</p>
+      
+      <!-- ITEM 1: Base Real -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">01. Base Real & Arquitetura Base</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Estrutura fundamental desenvolvida sobre .NET 8, JWT, Health Checks, Outbox/Inbox, RabbitMQ e Redis.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Servir de fundação resiliente e desacoplada para suportar replicação horizontal sem necessidade de alterar o código de negócio.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Garantir que o sistema seja nativamente preparado para ambientes em nuvem (Cloud-Native) e escalabilidade sob demanda.</p>
+      </div>
+
+      <!-- ITEM 2: Entrada -->
+      <div style="border-left: 2px solid var(--acid); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--acid); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">02. Roteamento & Load Balancer</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Camada de entrada composta por balanceador de carga HTTP (ex: NGINX / AWS ALB / Ingress Controller).</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Distribuir a carga de requisições entre instâncias ativas e encaminhar chamadas apenas para réplicas com sondas de prontidão (Readiness Probe) válidas.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Eliminar pontos únicos de falha de borda e evitar degradação de serviço direcionando tráfego a nós sobrecarregados.</p>
+      </div>
+
+      <!-- ITEM 3: Escrita -->
+      <div style="border-left: 2px solid #fff; padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: #fff; margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">03. Escala de Escrita (APIs & Outbox)</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Multiplicação das instâncias da API de Lançamentos trabalhando com concorrência distribuída no Outbox (Claim/Lease ou Worker dedicado).</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Absorver picos massivos de inserção de débitos e créditos mantendo locks curtos no banco de dados e evitando publicação duplicada de eventos.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Aumentar a vazão de gravação transacional garantindo a propriedade ACID e a entrega confiável de mensagens ao RabbitMQ.</p>
+      </div>
+
+      <!-- ITEM 4: Leitura -->
+      <div style="border-left: 2px solid var(--orange); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--orange); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">04. Escala de Leitura (APIs & Consumidores)</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Multiplicação das instâncias da API de Consolidado associada a consumidores RabbitMQ operando com Single Active Consumer e nós em standby.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Atender altíssimo volume de consultas de saldos pelo comerciante e garantir que apenas um worker por vez consolide saldos por data para evitar race conditions.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Desacoplar leitura de escrita e assegurar que o cálculo agregativo de saldos seja rápido, determinístico e livre de concorrência destrutiva.</p>
+      </div>
+
+      <!-- ITEM 5: Dados -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">05. Camada de Dados & Persistência</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Clusterização de infraestrutura com réplicas e failover automático para PostgreSQL, Redis e RabbitMQ (Quorum Queues).</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Manter réplicas de leitura para alívio do Postgres primário, distribuição de cache via Redis Sentinel/Cluster e espelhamento durável de mensagens no RabbitMQ.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Garantir continuidade de negócios, RPO zero para dados transacionais e alta resiliência contra falhas de hardware ou nós de computação.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- DRAWER SLIDE 13: Itens para Evolução -->
+  <aside class="glossary-drawer" id="evolutionInfoDrawer" aria-hidden="true" style="border-left: 1px solid var(--acid); width: 480px; max-width: 90vw;">
+    <div class="drawer-head">
+      <div>
+        <small style="color: var(--acid); font-family: monospace; letter-spacing: 0.2em;">PADRÃO ENTERPRISE // GUIA</small>
+        <h3 style="margin: 4px 0 20px; font-size: 26px;">Itens para Evolução</h3>
+      </div>
+      <button id="closeEvolutionInfo">×</button>
+    </div>
+    <div class="security-info-content" style="margin-top: 20px; overflow-y: auto; height: calc(100% - 100px); padding-bottom: 24px; font-size: 11px; line-height: 1.5; color: #c5d5d9; display: flex; flex-direction: column; gap: 20px;">
+      <p style="margin: 0; color: #8fa3ad; font-size: 12px;">Conheça os detalhes e justificativas técnicas das 3 propostas de evolução enterprise:</p>
+      
+      <!-- ITEM 1: Observabilidade Distribuída -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">01. Observabilidade Distribuída</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Ecossistema unificado de telemetria baseado em OpenTelemetry (OTLP) com exportação para Jaeger, Prometheus e Grafana.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Coletar métricas de runtime, logs estruturados e distributed traces cruzando todas as APIs e mensageria, além de monitorar o Lag de Fila no RabbitMQ.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Fornecer visibilidade ponta a ponta em tempo real, permitindo rastrear qualquer requisição por seu TraceId e antecipar gargalos de latência.</p>
+      </div>
+
+      <!-- ITEM 2: Segurança & Secrets -->
+      <div style="border-left: 2px solid var(--acid); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--acid); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">02. Segurança & Secrets</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Camada perimetral de proteção com WAF / API Gateway e gestão dinâmica de segredos via Vault / Azure Key Vault.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Bloquear ataques cibernéticos na borda (DDoS, SQLi, XSS), realizar offload TLS e injetar credenciais de banco e chaves JWT em runtime.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Implementar a política de Zero Hardcoding e garantir conformidade com frameworks de segurança da informação (OWASP / LGPD).</p>
+      </div>
+
+      <!-- ITEM 3: Esteira CI/CD & Auditoria DLQ -->
+      <div style="border-left: 2px solid var(--orange); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--orange); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">03. Esteira CI/CD & Auditoria DLQ</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Pipeline de implantação automatizada acoplada a mecanismos operacionais de tratamento de Dead Letter Queue (DLQ).</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Executar verificações estáticas de código (SonarQube/Trivy), deploy Blue/Green e disponibilizar painel para visualização e reprocessamento (replay) de mensagens mortas.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Assegurar entregas contínuas sem risco de downtime e fornecer governança total sobre mensagens que falharam após todas as tentativas de retry.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- DRAWER SLIDE 14: Arquitetura de Negócio -->
+  <aside class="glossary-drawer" id="processInfoDrawer" aria-hidden="true" style="border-left: 1px solid var(--orange); width: 480px; max-width: 90vw;">
+    <div class="drawer-head">
+      <div>
+        <small style="color: var(--orange); font-family: monospace; letter-spacing: 0.2em;">TOGAF BUSINESS // GUIA</small>
+        <h3 style="margin: 4px 0 20px; font-size: 26px;">Arquitetura de Negócio</h3>
+      </div>
+      <button id="closeProcessInfo">×</button>
+    </div>
+    <div class="security-info-content" style="margin-top: 20px; overflow-y: auto; height: calc(100% - 100px); padding-bottom: 24px; font-size: 11px; line-height: 1.5; color: #c5d5d9; display: flex; flex-direction: column; gap: 20px;">
+      <p style="margin: 0; color: #8fa3ad; font-size: 12px;">Compreenda o alinhamento estratégico da tecnologia com o negócio do comerciante:</p>
+      
+      <!-- ITEM 1: Fechamento de Caixa -->
+      <div style="border-left: 2px solid var(--cyan); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--cyan); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">01. Processo de Fechamento de Caixa</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Mapeamento BPMN da jornada diária do comerciante, cobrindo operações de PDV, conciliação e envio contábil.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Registrar vendas e despesas em tempo real, apurar a posição financeira do dia e transferir os fechamentos para a Tesouraria e Livro Razão.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Garantir acurácia contábil, eliminação de divergências manuais e continuidade transacional no ponto de venda.</p>
+      </div>
+
+      <!-- ITEM 2: Domínios Corporativos -->
+      <div style="border-left: 2px solid var(--acid); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--acid); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">02. Domínios Corporativos Carrefour</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Divisão em Bounded Contexts (Comercial, Financeiro/FluxoCaixa e Corporativo/ERP).</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Posicionar a solução FluxoCaixa como o motor desacoplado de gestão transacional de saldo entre as lojas físicas/e-commerce e o ERP SAP.</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Isolar a alta frequência de transações do PDV em relação à baixa frequência do ERP, mantendo máxima autonomia de domínio.</p>
+      </div>
+
+      <!-- ITEM 3: Governança & Risco -->
+      <div style="border-left: 2px solid var(--orange); padding-left: 12px; margin-bottom: 5px;">
+        <h4 style="color: var(--orange); margin: 0 0 4px; font-size: 12px; text-transform: uppercase; font-family: monospace;">03. Governança & Risco de Negócio (BIA)</h4>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--cyan);">O que é:</strong> Análise de Impacto no Negócio (Business Impact Analysis) graduando o nível de tolerância a falhas dos componentes.</p>
+        <p style="margin: 0 0 4px;"><strong style="color: var(--acid);">Para que serve:</strong> Estabelecer SLAs claros: Criticidade Vital (Caixa com zero downtime), Criticidade Média (Consolidado com minutos de tolerância) e Criticidade Diferida (Lote ERP).</p>
+        <p style="margin: 0;"><strong style="color: var(--orange);">Propósito:</strong> Direcionar investimentos de infraestrutura para onde o risco de perda financeira é crítico, garantindo resiliência proporcional ao negócio.</p>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="glossary-drawer" id="glossaryDrawer" aria-hidden="true">
+    <div class="drawer-head"><div><small>STUDY DECK</small><h3>Dicionário rápido</h3></div><button id="closeGlossary">×</button></div>
+    <input id="glossarySearch" type="search" placeholder="Buscar Outbox, SLO, RTO...">
+    <div id="glossaryList" class="glossary-list"></div>
+    <p class="drawer-foot">Glossário completo: <code>C:\ProvaBC_Carrefour\docs\GLOSSARIO.md</code></p>
+  </aside>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <audio id="bgMusic" src="Musicas/The Evolution Xavier.mp3" loop preload="auto"></audio>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>

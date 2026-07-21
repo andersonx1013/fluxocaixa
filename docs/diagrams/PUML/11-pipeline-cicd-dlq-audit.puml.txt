@@ -1,0 +1,40 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+
+title C4 Nivel 3 - Esteira CI/CD e Auditoria/Replay de DLQ (Evolucao Enterprise)
+
+Person(dev, "Desenvolvedor / DevOps", "Submete código e aprova alterações.")
+Person(suporte, "Operador / Suporte Técnico", "Audita falhas na DLQ e aciona a ferramenta de Replay.")
+
+System_Boundary(esteira_cicd, "Esteira de CI/CD (Pipeline de Implantação)") {
+    Container(git_repo, "Repositório Git", "GitHub / GitLab", "Código .NET 8, Dockerfiles e manifests de implantação.")
+    Container(ci_pipeline, "Pipeline de CI", "GitHub Actions / Azure Pipelines", "Executa restore, build, testes unitários e análise SAST (SonarQube).")
+    Container(security_scan, "Scanner de Imagens", "Trivy / Clair", "Analisa imagem Docker contra vulnerabilidades conhecidas (CVEs) do SO e pacotes .NET.")
+    Container(registry, "Container Registry", "ACR / Harbor", "Armazena imagens de contêiner imutáveis, assinadas digitalmente com Cosign.")
+    Container(cd_deploy, "Orquestrador CD (GitOps)", "ArgoCD / Flux", "Aplica o deploy em produção utilizando estratégia Blue/Green ou Canary sem downtime.")
+}
+
+System_Boundary(mecanica_dlq, "Mecânica de DLQ & Ferramental de Apoio") {
+    ContainerQueue(fila_principal, "Fila de Consolidado", "RabbitMQ Main Queue", "Recebe eventos de lançamentos para processamento pelo Consolidado.")
+    Container(api_consolidado, "API Consolidado (Worker)", ".NET 8 Worker Service", "Consome a mensagem. Em caso de erro irrecuperável (ex: formato inválido), envia para a Dead Letter Queue após N retentativas.")
+    ContainerQueue(fila_dlq, "Dead Letter Queue (DLQ)", "RabbitMQ DLQ (`consolidado-dlq`)", "Armazena mensagens mortas mantendo payload original, causa da exceção e stacktrace nos headers.")
+    Container(dlq_portal, "Portal de Auditoria & Replay", "Web App / CLI Operator", "Interface para a equipe de suporte visualizar o payload da mensagem morta, corrigir o motivo do travamento e disparar o Replay.")
+}
+
+Rel(dev, git_repo, "Push / Pull Request", "Git")
+Rel(git_repo, ci_pipeline, "Trigger no commit", "Webhook")
+Rel(ci_pipeline, security_scan, "Gera imagem Docker e submete a scan", "Docker CLI")
+Rel(security_scan, registry, "Publica imagem aprovada sem vulnerabilidades de alto risco", "Docker Push")
+Rel(registry, cd_deploy, "Notifica nova tag imutável", "GitOps Event")
+Rel(cd_deploy, api_consolidado, "Promove nova versão Blue/Green", "Kubernetes Manifests")
+
+Rel(fila_principal, api_consolidado, "Entrega mensagem para agregação", "AMQP")
+Rel(api_consolidado, fila_dlq, "Desvia mensagem com falha persistente", "AMQP Dead-Lettering")
+
+Rel(fila_dlq, dlq_portal, "Exibe mensagens represadas", "AMQP / Management API")
+Rel(suporte, dlq_portal, "Inspeciona exceção e corrige estado", "Web Interface")
+Rel(dlq_portal, fila_principal, "Dispara Replay da mensagem corrigida", "AMQP Publish")
+
+SHOW_LEGEND()
+@enduml

@@ -34,11 +34,12 @@ jobs:
       - name: Validate Compose
         run: docker compose config --quiet
 
-      - name: Audit NuGet dependencies
-        shell: bash
+      - name: Render and verify architecture diagrams
+        shell: pwsh
         run: |
-          audit="$(dotnet list FluxoCaixa.sln package --vulnerable --include-transitive)"
-          echo "$audit"
-          if echo "$audit" | grep -q "has the following vulnerable packages"; then
-            exit 1
-          fi
+          ./scripts/Render-Diagrams.ps1
+          git diff --exit-code -- docs/diagrams
+
+      - name: Audit NuGet dependencies
+        shell: pwsh
+        run: ./scripts/Test-Dependencies.ps1

@@ -94,10 +94,30 @@ Data da revisão: 18/07/2026.
 
 **Motivos:** uma dependência degradável não deve retirar a API de lançamentos do balanceador quando o Outbox ainda aceita trabalho, nem retirar o consolidado quando o fallback de cache atende leituras.
 
+## ADR-010 - Topologia de produção altamente disponível
+
+**Status:** aceito como arquitetura-alvo; não implementado no Compose local.
+
+**Decisão:** executar gateway e APIs em pelo menos duas réplicas distribuídas entre zonas; RabbitMQ com três nós e quorum queue; Redis com réplica/failover; PostgreSQL por domínio com standby e PITR; telemetria centralizada e backups fora da região.
+
+**Motivos:** remover pontos únicos de falha, permitir escala horizontal independente e preservar a disponibilidade de lançamentos durante falhas do consolidado. O desenho está em `docs/diagrams/07-deployment-producao`.
+
+**Trade-off:** a topologia aumenta custo e complexidade operacional. O Compose mantém uma instância por componente para ser reproduzível offline e não deve ser confundido com implantação de produção.
+
+## ADR-011 - SLOs e recuperação orientados por risco
+
+**Status:** aceito como meta operacional.
+
+**Decisão:** adotar os SLIs, SLOs, error budgets, RTO/RPO e limiares de alerta definidos em `docs/SLOS.md`. A meta mínima da prova permanece 50 req/s com no máximo 5% de perda; alertas disparam antes do limite para preservar margem de reação.
+
+**Motivos:** disponibilidade, desempenho e confiabilidade precisam ser verificáveis. Metas numéricas orientam capacidade, autoscaling, resposta a incidentes e priorização de melhorias.
+
+**Trade-off:** os números são objetivos iniciais e devem ser recalibrados com tráfego e hardware reais, sem relaxar o requisito obrigatório da prova.
+
 ## Evoluções priorizadas
 
 1. Migrations EF Core e testes de integração com Testcontainers.
-2. OpenTelemetry, Prometheus/Grafana e alertas para idade/tamanho do Outbox, lag da fila e DLQ.
+2. Implementação da topologia-alvo, OpenTelemetry, dashboards e alertas definidos em `docs/SLOS.md`.
 3. Retenção automática de Outbox/Inbox e ferramenta autenticada para replay da DLQ.
 4. OAuth2/OIDC, HTTPS, rotação de segredo e rate limiting por cliente.
-5. CI no GitHub Actions com build, testes, renderização dos diagramas e scan de dependências/imagens.
+5. Scan de imagens, assinatura de artefatos e pipeline de deployment com aprovação e rollback.

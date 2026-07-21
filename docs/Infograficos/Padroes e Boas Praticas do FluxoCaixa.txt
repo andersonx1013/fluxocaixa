@@ -1,0 +1,335 @@
+---
+
+# 📋 DOCUMENTO COMPLETO PARA INFográFICO
+## Projeto: FluxoCaixa (C:\ProvaBC_Carrefour)
+
+---
+
+## 🏗️ 1. ESTRUTURA DO PROJETO
+
+```
+C:\ProvaBC_Carrefour\
+├── src\
+│   ├── FluxoCaixa.Shared\                    ← Kernel Compartilhado
+│   ├── FluxoCaixa.Lancamentos\               ← Microsserviço #1
+│   │   ├── FluxoCaixa.Lancamentos.Domain\     → Domain Layer
+│   │   ├── FluxoCaixa.Lancamentos.Application\ → Application Layer
+│   │   ├── FluxoCaixa.Lancamentos.Infrastructure\ → Infrastructure Layer
+│   │   └── FluxoCaixa.Lancamentos.API\        → Presentation Layer
+│   └── FluxoCaixa.Consolidado\               ← Microsserviço #2
+│       ├── FluxoCaixa.Consolidado.Domain\
+│       ├── FluxoCaixa.Consolidado.Application\
+│       ├── FluxoCaixa.Consolidado.Infrastructure\
+│       └── FluxoCaixa.Consolidado.API\
+├── tests\                                     ← Testes unitários
+├── docs\                                      ← Documentação
+├── docker-compose.yml                         ← 6 serviços
+└── .github\workflows\ci.yml                   ← CI/CD
+```
+
+---
+
+## 🎯 2. DESIGN PATTERNS (GoF) — ARQUIVO POR ARQUIVO
+
+### 🔷 Repository (6 ocorrências)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Lancamentos/...Domain/ILancamentoRepository.cs` | 3-10 | Interface do Repository |
+| `src/FluxoCaixa.Lancamentos/...Infrastructure/LancamentoRepository.cs` | 7-38 | Implementação do Repository |
+| `src/FluxoCaixa.Consolidado/...Domain/IConsolidadoRepository.cs` | 3-7 | Interface do Repository |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/ConsolidadoRepository.cs` | 7-31 | Implementação do Repository |
+
+### 🔷 Unit of Work (4 ocorrências)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Lancamentos/...Domain/IUnitOfWork.cs` | 3-6 | Interface do UoW |
+| `src/FluxoCaixa.Lancamentos/...Infrastructure/LancamentosUnitOfWork.cs` | 5-16 | Implementação do UoW |
+| `src/FluxoCaixa.Consolidado/...Domain/IUnitOfWork.cs` | 3-6 | Interface do UoW |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/ConsolidadoUnitOfWork.cs` | 5-16 | Implementação do UoW |
+
+### 🔷 Singleton (1 ocorrência)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Consolidado/...Infrastructure/RedisCacheService.cs` | 8-69 | Classe Singleton |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/DependencyInjection.cs` | (AddSingleton) | Registro no DI |
+
+### 🔷 Factory Method (1 ocorrência)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Shared/Resultado.cs` | 3-30 | Métodos estáticos `Ok()` e `Falhar()` |
+
+### 🔷 Strategy (1 ocorrência)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Consolidado/...Application/ICacheService.cs` | 3-7 | Interface Strategy |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/RedisCacheService.cs` | 8-69 | Implementação concreta |
+
+### 🔷 Observer (1 ocorrência — Pub/Sub)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Lancamentos/...Application/IEventOutbox.cs` | 5-11 | Interface Observer (publicador) |
+| `src/FluxoCaixa.Lancamentos/...Infrastructure/OutboxEventWriter.cs` | 1-30 | Escrita de eventos |
+| `src/FluxoCaixa.Lancamentos/...Infrastructure/OutboxPublisherService.cs` | 11-142 | Publicador BackgroundService |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/RabbitMQEventConsumer.cs` | 13-154 | Consumidor BackgroundService |
+
+### 🔷 Decorator (1 ocorrência)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Lancamentos/...API/Middleware/GlobalExceptionMiddleware.cs` | 5-47 | Middleware Decorator |
+| `src/FluxoCaixa.Consolidado/...API/Middleware/GlobalExceptionMiddleware.cs` | 5-47 | Middleware Decorator |
+
+### 🔷 Template Method (2 ocorrências)
+
+| Arquivo | Linha | O quê |
+|---------|-------|-------|
+| `src/FluxoCaixa.Lancamentos/...Infrastructure/OutboxPublisherService.cs` | 11-142 | BackgroundService |
+| `src/FluxoCaixa.Consolidado/...Infrastructure/RabbitMQEventConsumer.cs` | 13-154 | BackgroundService |
+
+---
+
+## ✅ 3. PRINCÍPIOS SOLID — ARQUIVO POR ARQUIVO
+
+### 📌 S — Single Responsibility Principle (SRP)
+
+| Arquivo | Linha | Responsabilidade ÚNICA |
+|---------|-------|----------------------|
+| `Lancamento.cs` | 5-31 | APENAS regras de lançamento financeiro |
+| `ConsolidadoDiario.cs` | 5-54 | APENAS agregação diária (débitos/créditos/saldo) |
+| `LancamentoService.cs` | 11-154 | APENAS casos de uso de lançamentos |
+| `ConsolidadoService.cs` | 11-167 | APENAS consolidação diária |
+| `OutboxPublisherService.cs` | 11-142 | APENAS publicar eventos do Outbox |
+| `RabbitMQEventConsumer.cs` | 13-154 | APENAS consumir eventos RabbitMQ |
+| `RedisCacheService.cs` | 8-69 | APENAS cache Redis com fallback |
+| `GlobalExceptionMiddleware.cs` | 5-47 | APENAS capturar exceções não tratadas |
+| `MensagensErro.cs` | 3-12 | APENAS constantes de erro do domínio |
+| `TipoLancamento.cs` | 3-7 | APENAS tipos de lançamento (enum) |
+
+### 📌 O — Open/Closed Principle (OCP)
+
+| Arquivo | Linha | Por que é aberto para extensão |
+|---------|-------|-------------------------------|
+| `ICacheService.cs` | 3-7 | Pode ter RedisCacheService, InMemoryCacheService, etc. |
+| `IEventOutbox.cs` | 5-11 | Pode usar RabbitMQ, Kafka, ServiceBus, etc. |
+| `ILancamentoRepository.cs` | 3-10 | Pode usar EF Core, Dapper, ADO.NET, etc. |
+| `IProcessedMessageStore.cs` | 3-8 | Pode usar PostgreSQL, MongoDB, Redis, etc. |
+| `IConsolidadoRepository.cs` | 3-7 | Pode usar EF Core, Dapper, etc. |
+| `IUnitOfWork.cs` (ambos) | 3-6 | Pode ter diferentes implementações |
+
+### 📌 L — Liskov Substitution Principle (LSP)
+
+| Implementação | Interface | Pode substituir? |
+|--------------|-----------|-----------------|
+| `LancamentoRepository` | `ILancamentoRepository` | ✅ Sim |
+| `ConsolidadoRepository` | `IConsolidadoRepository` | ✅ Sim |
+| `LancamentosUnitOfWork` | `IUnitOfWork` | ✅ Sim |
+| `ConsolidadoUnitOfWork` | `IUnitOfWork` | ✅ Sim |
+| `OutboxEventWriter` | `IEventOutbox` | ✅ Sim |
+| `ProcessedMessageStore` | `IProcessedMessageStore` | ✅ Sim |
+| `RedisCacheService` | `ICacheService` | ✅ Sim |
+
+### 📌 I — Interface Segregation Principle (ISP)
+
+| Interface | Quantidade de Métodos | Coesa? |
+|-----------|----------------------|--------|
+| `ILancamentoRepository` | 5 métodos | ✅ Sim, todos de persistência |
+| `IUnitOfWork` | 1 método (`SaveChangesAsync`) | ✅ Sim, mínimo necessário |
+| `ICacheService` | 2 métodos (`GetOrSetAsync`, `RemoverAsync`) | ✅ Sim, só cache |
+| `IProcessedMessageStore` | 2 métodos (`JaFoiProcessadaAsync`, `FinalizarProcessamentoAsync`) | ✅ Sim, só inbox |
+| `IEventOutbox` | 3 métodos (um para cada tipo de evento) | ✅ Sim, só outbox |
+
+### 📌 D — Dependency Inversion Principle (DIP)
+
+| Arquivo | Linha | Evidência |
+|---------|-------|-----------|
+| `LancamentoService.cs` | 19-25 | Construtor recebe `ILancamentoRepository`, `IEventOutbox`, `IUnitOfWork` (interfaces) |
+| `ConsolidadoService.cs` | 19-29 | Construtor recebe `IConsolidadoRepository`, `ICacheService`, `IProcessedMessageStore`, `IUnitOfWork` (interfaces) |
+| `DependencyInjection.cs (Lancamentos)` | 23-26 | `services.AddScoped<ILancamentoRepository, LancamentoRepository>()` |
+| `DependencyInjection.cs (Consolidado)` | 22-24 | `services.AddScoped<IConsolidadoRepository, ConsolidadoRepository>()` |
+| `LancamentosController.cs` | 13-17 | Depende de `LancamentoService`, não de repositórios |
+| Domain (ambos) | — | NÃO referencia Infrastructure (EF Core, RabbitMQ, Redis) |
+
+---
+
+## 🧹 4. CLEAN CODE — PRÁTICAS POR ARQUIVO
+
+### 📝 Nomes Significativos
+
+| Arquivo | Linha | Exemplo |
+|---------|-------|---------|
+| `LancamentoService.cs` | 31, 63, 94, 110 | `RegistrarAsync`, `AtualizarAsync`, `ExcluirAsync`, `ObterSaldoDiarioAsync` |
+| `ConsolidadoService.cs` | 131, 142, 147 | `JaFoiProcessadaAsync`, `FinalizarProcessamentoAsync`, `InvalidarCacheAsync` |
+| `ConsolidadoService.cs` | 101-104 | `consolidadoAntigo`, `dataAntiga`, `tipoAntigo`, `valorAntigo` |
+
+### 📏 Funções Pequenas (1-8 linhas)
+
+| Arquivo | Linha | Método | Tamanho |
+|---------|-------|--------|---------|
+| `ConsolidadoDiario.cs` | 23-27 | `AdicionarDebito()` | 4 linhas |
+| `ConsolidadoDiario.cs` | 42-46 | `RemoverCredito()` | 5 linhas |
+| `OutboxMessage.cs` | 30-34 | `RegistrarFalha()` | 4 linhas |
+| `ConsolidadoService.cs` | 149 | `CriarCacheKey()` | 1 linha |
+| `ConsolidadoService.cs` | 157-165 | `MapearParaDto()` | 8 linhas |
+
+### 🎯 Result Pattern (evita exceções)
+
+| Arquivo | Linha | Evidência |
+|---------|-------|-----------|
+| `Resultado.cs` | 5-30 | `Resultado<T>.Ok(dados)` e `Resultado<T>.Falhar(erro)` |
+| `LancamentoService.cs` | 128 | `Resultado<T>.Falhar(MensagensErro.ValorDeveSerMaiorQueZero)` |
+
+### 🔒 Imutabilidade via Records
+
+| Arquivo | Linha | Tipo |
+|---------|-------|------|
+| `CriarLancamentoDto.cs` | 3-7 | `record` |
+| `AtualizarLancamentoDto.cs` | 3-7 | `record` |
+| `LancamentoResponseDto.cs` | 3-9 | `record` |
+| `ConsolidadoResponseDto.cs` | 3-8 | `record` |
+| `LancamentoCriadoEvent.cs` | 3-23 | `record` |
+
+### ♻️ DRY (Don't Repeat Yourself)
+
+| Arquivo | Linha | Prática |
+|---------|-------|---------|
+| `MensagensErro.cs` | 3-12 | Centraliza TODAS as strings de erro |
+| `ConsolidadoService.cs` | 151-162 | Métodos `Adicionar()` / `Remover()` extraem switch duplicado |
+| `ConsolidadoService.cs` | 149 | `CriarCacheKey()` evita concatenação duplicada |
+| `LancamentoService.cs` | 154-162 | `MapearParaDto()` mapeamento centralizado |
+
+### 🛡️ Tratamento Explícito de Erros
+
+| Arquivo | Linha | Prática |
+|---------|-------|---------|
+| `GlobalExceptionMiddleware.cs` (ambos) | 5-47 | Middleware captura TODAS as exceções |
+| `RedisCacheService.cs` | 55-58 | Fallback se Redis falhar (captura `RedisException`) |
+| `RabbitMQEventConsumer.cs` | 91 | DLQ para mensagens inválidas (`BasicNack` com `requeue: false`) |
+| `DependencyInjection.cs (Lancamentos)` | 20-24 | EF Core `EnableRetryOnFailure(maxRetryCount: 3)` |
+| `ConsolidadoService.cs` | 133 | Validação defensiva de `MessageId` |
+
+### 📚 Documentação
+
+| Arquivo | Linha | Prática |
+|---------|-------|---------|
+| `LancamentosController.cs` | 26 | XML doc comments nos endpoints |
+| `Program.cs` (ambos) | 13-55 | Comentários de seção (`// ── Controllers ───`) |
+| `docs/ADR.md` | — | 11 Architecture Decision Records documentados |
+| `README.md` | 21-31 | Mapa da documentação com tabela de artefatos |
+
+---
+
+## 🏛️ 5. PADRÕES ARQUITETURAIS
+
+### Clean Architecture (4 camadas)
+
+| Camada | Projeto | Responsabilidade |
+|--------|---------|-----------------|
+| **Domain** (centro) | `FluxoCaixa.*.Domain` | Entidades, regras de negócio, interfaces de repositório |
+| **Application** | `FluxoCaixa.*.Application` | Casos de uso, DTOs, interfaces de infraestrutura |
+| **Infrastructure** | `FluxoCaixa.*.Infrastructure` | EF Core, RabbitMQ, Redis, implementações |
+| **Presentation** | `FluxoCaixa.*.API` | Controllers HTTP, Middleware, Swagger |
+
+### Microsserviços (Database per Service)
+
+| Microsserviço | Banco | Tabelas |
+|--------------|-------|---------|
+| LancamentosAPI | PostgreSQL `fluxocaixa_lancamentos` | Lancamentos, OutboxMessages |
+| ConsolidadoAPI | PostgreSQL `fluxocaixa_consolidado` | ConsolidadosDiarios, ProcessedMessages |
+
+### Transactional Outbox
+
+| Componente | Arquivo | Função |
+|-----------|---------|--------|
+| Tabela Outbox | `FluxoCaixaDbContext.cs` (Lancamentos) | Mapeamento da tabela `OutboxMessage` |
+| Entidade | `OutboxMessage.cs` | Modelo da mensagem |
+| Escrita | `OutboxEventWriter.cs` | Escreve na tabela na MESMA transação |
+| Publicador | `OutboxPublisherService.cs` | Lê e publica no RabbitMQ |
+| Garantia | `LancamentoService.cs:48-56` | Add + Outbox + Save no mesmo UoW |
+
+### Idempotent Inbox
+
+| Componente | Arquivo | Função |
+|-----------|---------|--------|
+| Contrato | `IProcessedMessageStore.cs` | Interface do Inbox |
+| Entidade | `ProcessedMessage.cs` | Modelo (MessageId + ProcessedAt) |
+| Implementação | `ProcessedMessageStore.cs` | Verifica e marca como processado |
+| Uso | `ConsolidadoService.cs:68-84` | `JaFoiProcessadaAsync` + `FinalizarProcessamentoAsync` |
+
+### Cache-Aside
+
+| Componente | Arquivo | Função |
+|-----------|---------|--------|
+| Interface | `ICacheService.cs` | Contrato do cache |
+| Implementação | `RedisCacheService.cs` | Redis com fallback PostgreSQL |
+| TTL | `ConsolidadoService.cs:16` | `CacheTtl = TimeSpan.FromMinutes(5)` |
+
+---
+
+## 📊 6. TABELA RESUMO — TUDO EM UM LUGAR SÓ
+
+| # | Arquivo | Design Pattern | SOLID | Clean Code | Arquitetura |
+|---|---------|---------------|-------|-----------|-------------|
+| 1 | `Lancamento.cs` | Entity/AggregateRoot | **SRP** | Nome revelador | Domain Layer |
+| 2 | `ConsolidadoDiario.cs` | Entity/AggregateRoot | **SRP** | Funções 4-5 linhas | Domain Layer |
+| 3 | `ILancamentoRepository.cs` | **Repository** | **ISP/OCP/DIP** | — | Domain Layer |
+| 4 | `IConsolidadoRepository.cs` | **Repository** | **ISP/OCP/DIP** | — | Domain Layer |
+| 5 | `IUnitOfWork.cs` (×2) | **Unit of Work** | **ISP** | — | Domain Layer |
+| 6 | `LancamentoService.cs` | Service | **SRP/DIP** | Verbos ação, Result Pattern | Application Layer |
+| 7 | `ConsolidadoService.cs` | Service | **SRP/DIP** | Nomes autoexplicativos | Application Layer |
+| 8 | `IEventOutbox.cs` | **Observer** | **OCP/ISP** | — | Application Layer |
+| 9 | `ICacheService.cs` | **Strategy** | **OCP/ISP** | — | Application Layer |
+| 10 | `IProcessedMessageStore.cs` | **Inbox** | **ISP** | — | Application Layer |
+| 11 | `Resultado.cs` | **Factory Method** | — | Result Pattern | Shared Kernel |
+| 12 | `MensagensErro.cs` | Constantes | **SRP** | **DRY** | Shared Kernel |
+| 13 | `LancamentoRepository.cs` | **Repository** | **LSP** | — | Infrastructure |
+| 14 | `ConsolidadoRepository.cs` | **Repository** | **LSP** | — | Infrastructure |
+| 15 | `LancamentosUnitOfWork.cs` | **Unit of Work** | **LSP** | — | Infrastructure |
+| 16 | `ConsolidadoUnitOfWork.cs` | **Unit of Work** | **LSP** | — | Infrastructure |
+| 17 | `OutboxEventWriter.cs` | **Observer** | **LSP** | — | Infrastructure |
+| 18 | `OutboxPublisherService.cs` | **Observer/Template Method** | **SRP** | — | Infrastructure |
+| 19 | `RabbitMQEventConsumer.cs` | **Observer/Template Method** | **SRP** | DLQ p/ msgs inválidas | Infrastructure |
+| 20 | `RedisCacheService.cs` | **Singleton/Strategy** | **SRP** | Fallback resiliente | Infrastructure |
+| 21 | `ProcessedMessageStore.cs` | **Inbox** | **LSP** | — | Infrastructure |
+| 22 | `GlobalExceptionMiddleware.cs` (×2) | **Decorator** | **SRP** | Tratamento global erros | API Layer |
+| 23 | `LancamentosController.cs` | Controller | **SRP** | XML docs | API Layer |
+| 24 | `ConsolidadoController.cs` | Controller | **SRP** | — | API Layer |
+| 25 | `DependencyInjection.cs` (×2) | Configuration | **DIP** | — | Infrastructure |
+| 26 | `LancamentoCriadoEvent.cs` | Event/Record | — | Imutabilidade | Shared Kernel |
+| 27 | `CriarLancamentoDto.cs` | DTO/Record | — | Imutabilidade | Application Layer |
+| 28 | `AtualizarLancamentoDto.cs` | DTO/Record | — | Imutabilidade | Application Layer |
+| 29 | `LancamentoResponseDto.cs` | DTO/Record | — | Imutabilidade | Application Layer |
+| 30 | `ConsolidadoResponseDto.cs` | DTO/Record | — | Imutabilidade | Application Layer |
+
+---
+
+## 🐳 7. INFRAESTRUTURA (docker-compose.yml)
+
+| Serviço | Tecnologia | Função |
+|---------|-----------|--------|
+| `lancamentos-api` | .NET 8 Web API | CRUD de lançamentos (porta 5001) |
+| `consolidado-api` | .NET 8 Web API | Consulta consolidado (porta 5002) |
+| `postgres-lancamentos` | PostgreSQL 16 | Banco do microsserviço de lançamentos |
+| `postgres-consolidado` | PostgreSQL 16 | Banco do microsserviço de consolidado |
+| `rabbitmq` | RabbitMQ 4 | Message broker (Exchange + Queue + DLQ) |
+| `redis` | Redis 7 | Cache (TTL 5 min) |
+
+---
+
+## 📁 8. DOCUMENTAÇÃO
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `docs/ADR.md` | 11 Architecture Decision Records |
+| `docs/REQUISITOS.md` | Matriz de rastreabilidade |
+| `docs/SLOS.md` | SLOs, RTO/RPO, alertas |
+| `docs/GLOSSARIO.md` | Glossário técnico e de domínio |
+| `docs/diagrams/` | 7 diagramas C4 (Contexto → Deployment) |
+| `tests/` | 23 testes unitários (13 Lancamentos + 10 Consolidado) |
+
+---

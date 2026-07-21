@@ -18,12 +18,12 @@ Fórmula: `SaldoFinal = SaldoInicial - TotalDebitos + TotalCreditos`.
 
 | Requisito | Status | Evidência no repositório |
 |---|---|---|
-| Desenho da solução | Atendido | C4 níveis 1, 2, 3 e 4 + fluxo de resiliência em `docs/diagrams` |
+| Desenho da solução | Atendido | C4 níveis 1, 2, 3 e 4, fluxo de resiliência e C4 Deployment da arquitetura-alvo em `docs/diagrams` |
 | C# | Atendido | .NET 8 em toda a solução de aplicação |
 | Testes | Atendido | 23 testes unitários + 4 scripts de teste operacional |
 | Boas práticas | Atendido | Clean Architecture, SOLID, Repository, Unit of Work, Outbox, Inbox, cache-aside, DI |
 | README claro | Atendido | início rápido, JWT local, endpoints, testes e troubleshooting |
-| Documentação no repositório | Atendido | README, ADR, matriz, relatório e fontes/PNGs dos diagramas |
+| Documentação no repositório | Atendido | README, ADR, matriz, SLOs, glossário, relatório e fontes/PNGs dos diagramas |
 | Repositório público GitHub | Ação externa pendente | o código local está pronto; falta configurar a URL pública da conta do candidato e fazer push |
 
 O último item não pode ser concluído apenas em `localhost`, pois depende da conta GitHub do candidato.
@@ -33,13 +33,15 @@ O último item não pode ser concluído apenas em `localhost`, pois depende da c
 | ID | Meta | Estratégia | Validação |
 |---|---|---|---|
 | RNF-01 | Lançamentos disponíveis com consolidado fora | integração somente por Outbox/RabbitMQ; nenhuma chamada síncrona | `Test-Resilience.ps1`: aprovado, 0% de perda |
-| RNF-02 | 50 req/s no consolidado | API stateless, Redis, índice/PK por data, leitura `AsNoTracking` | `Test-Load.ps1`: 500/500, 49,86 req/s, 0% de perda |
+| RNF-02 | 50 req/s no consolidado | API stateless, Redis, índice/PK por data, leitura `AsNoTracking` | `Test-Load.ps1`: 500/500, 49,99 req/s, 0% de perda |
 | RNF-03 | no máximo 5% de perda | cache + fila durável + idempotência | perda medida: 0% no ambiente local |
 | RNF-04 | tolerar queda do broker | Transactional Outbox e reconexão em background | `Test-Outbox.ps1` |
 | RNF-05 | evitar duplicidade | Inbox transacional por `MessageId` | teste `MensagemDuplicada_NaoDeveAlterarSaldo` |
 | RNF-06 | evitar mensagem venenosa | ack manual e DLQ | topologia RabbitMQ e inspeção da fila |
 | RNF-07 | cache não obrigatório | fallback Redis -> PostgreSQL | implementação `RedisCacheService` |
 | RNF-08 | autenticação/autorização | JWT + policy/role `comerciante` | endpoints retornam 401/403 sem credencial/permissão válida |
+| RNF-09 | escalabilidade e alta disponibilidade | APIs stateless, balanceamento, 2+ réplicas, quorum queue e dados com failover | `07-deployment-producao` e ADR-010; topologia-alvo não simulada localmente |
+| RNF-10 | métricas e metas claras | SLOs de disponibilidade, p95/p99, convergência, RTO/RPO e alertas | `docs/SLOS.md` e ADR-011 |
 
 ## Cenários de falha
 
@@ -61,14 +63,8 @@ O último item não pode ser concluído apenas em `localhost`, pois depende da c
 - Consultas LINQ/EF Core parametrizadas.
 - Erros internos não retornam stack trace ao cliente.
 - Segredo default é apenas local e substituível por `JWT_SECRET_KEY`.
-- Produção ainda exige HTTPS, OAuth2/OIDC, secret manager, rate limit e auditoria.
+- A arquitetura-alvo exige TLS, OAuth2/OIDC, secret manager, rate limit, WAF, redes segmentadas e auditoria; esses controles estão representados no C4 Deployment e detalhados em `docs/SLOS.md`.
 
-## Métricas recomendadas para produção
+## Metas mensuráveis de produção
 
-- disponibilidade mensal por API;
-- p50/p95/p99 e taxa de erro por rota;
-- idade e quantidade de mensagens pendentes no Outbox;
-- profundidade/lag da fila e quantidade na DLQ;
-- cache hit ratio e latência Redis/PostgreSQL;
-- tempo de convergência entre lançamento e consolidado;
-- conflitos/duplicidades detectados pela Inbox.
+As metas aprovadas para a arquitetura-alvo estão em `docs/SLOS.md`: disponibilidade mensal de 99,9% por API, sucesso mínimo de 95% a 50 req/s, latências p95/p99, convergência de eventos, RTO/RPO e limiares de alerta para Outbox, fila, DLQ, banco e capacidade.

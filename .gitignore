@@ -8,7 +8,7 @@
 *.userosscache
 *.sln.docstates
 
-# Build results
+# Build results (compilação)
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -23,43 +23,25 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+*.log
 
-# Visual Studio
+# Visual Studio / IDEs
 .vs/
 *.vssscc
 .builds
 *.pidb
 *.svclog
 *.scc
-
-# JetBrains Rider
 .idea/
 *.sln.iml
-
-# VS Code
 .vscode/
 
-# .NET Core
+# .NET Core & Build Artifacts
 project.lock.json
 project.fragment.lock.json
 artifacts/
 
-# NuGet
-*.nupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
-*.nuget.props
-*.nuget.targets
-
-# Docker
-docker-compose.override.yml
-
-# Environment
-.env
-.env.local
-*.env
-
-# OS
+# OS Junk
 .DS_Store
 Thumbs.db
 ehthumbs.db
@@ -70,3 +52,10 @@ TestResults/
 *.trx
 *.coverage
 coverage.*
+
+# Presentation & Runtime Temp Files
+.presentation-server.pid
+*.inspect.ndjson
+node_modules/
+.tmp/
+temp/

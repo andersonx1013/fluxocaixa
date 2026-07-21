@@ -17,7 +17,7 @@ Escopo: evidência reproduzível para a prova, não certificação de produção
 | RabbitMQ parado | lançamento aceito no Outbox e convergência após retorno |
 | Carga no GET consolidado | 500/500 sucessos |
 | Taxa programada | 50 req/s durante 10 s |
-| Vazão observada | 49,86 req/s |
+| Vazão observada | 49,99 req/s |
 | Perda observada | 0% (limite: 5%) |
 
 ## Comandos
@@ -25,7 +25,7 @@ Escopo: evidência reproduzível para a prova, não certificação de produção
 ```powershell
 docker compose up -d --build
 dotnet test FluxoCaixa.sln --configuration Release
-dotnet list FluxoCaixa.sln package --vulnerable --include-transitive
+.\scripts\Test-Dependencies.ps1
 .\scripts\Test-Smoke.ps1
 .\scripts\Test-Resilience.ps1
 .\scripts\Test-Outbox.ps1
@@ -54,7 +54,7 @@ Requisicoes       : 500
 Sucessos          : 500
 Falhas            : 0
 PerdaPercentual   : 0%
-VazaoObservadaRps : 49,86
+VazaoObservadaRps : 49,99
 MetaRps           : 50
 ```
 

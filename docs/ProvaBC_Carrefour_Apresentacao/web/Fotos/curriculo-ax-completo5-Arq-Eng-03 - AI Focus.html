@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anderson Xavier - Principal AI Engineer & Architect</title>
+    <style>
+        /* --- DESIGN MODERNO CLEAN TECH (AMIGÁVEL PARA ATS) --- */
+        :root {
+            --color-text: #374151;       /* Cinza escuro para leitura confortável */
+            --color-heading: #111827;    /* Preto sólido para títulos */
+            --color-accent: #2563eb;     /* Azul Tech */
+            --color-meta: #6b7280;       /* Cinza médio para datas */
+            --bg-body: #f3f4f6;          /* Fundo da tela */
+            --bg-paper: #ffffff;         /* Papel */
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text);
+            background-color: var(--bg-body);
+            line-height: 1.5;
+            font-size: 10.5pt;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Container A4 */
+        .resume-container {
+            background-color: var(--bg-paper);
+            width: 100%;
+            max-width: 21cm;
+            min-height: 29.7cm;
+            padding: 2.5cm;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- HEADER --- */
+        header {
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--color-heading);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 24pt;
+            color: var(--color-heading);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+
+        .role-title {
+            font-size: 12pt;
+            font-weight: 600;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 9.5pt;
+            color: var(--color-text);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .contact-info a, .contact-info span {
+            color: var(--color-text);
+            text-decoration: none;
+        }
+        
+        .contact-info a:hover {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        /* --- SECTIONS --- */
+        section { margin-bottom: 22px; }
+
+        h3 {
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--color-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 12px;
+            padding-bottom: 4px;
+        }
+
+        p { text-align: justify; margin-bottom: 10px; }
+
+        strong { font-weight: 700; color: #000; }
+
+        /* --- SKILLS GRID --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 190px 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .skill-category {
+            font-weight: 700;
+            font-size: 10pt;
+            color: var(--color-heading);
+        }
+
+        .skill-list { font-size: 10pt; }
+
+        /* --- EXPERIENCE --- */
+        .job-entry { margin-bottom: 20px; }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+
+        .company { font-weight: 700; font-size: 11pt; color: var(--color-heading); }
+        .role { font-weight: 500; font-style: italic; color: var(--color-text); }
+        .date { font-size: 9.5pt; color: var(--color-meta); text-align: right; white-space: nowrap; }
+
+        ul { list-style: none; padding-left: 0; }
+
+        li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 4px;
+            color: var(--color-text);
+            text-align: justify;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--color-accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* CLASSE PARA DESTACAR AS NOVIDADES (AZUL ESCURO) */
+        .highlight-blue {
+            color: #00008B;
+            font-weight: bold;
+        }
+
+        /* --- PRINT SETTINGS --- */
+        @media print {
+            body { background-color: #fff; padding: 0; display: block; }
+            .resume-container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; }
+            @page { size: A4; margin: 1.2cm 1.5cm; }
+            a { text-decoration: none; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="resume-container">
+        
+        <!-- HEADER -->
+        <header>
+            <h1>Anderson Xavier</h1>
+            <div class="role-title"><span class="highlight-blue">Principal AI Engineer | Builder &</span> Software Architect</div>
+            <div class="contact-info">
+                <span>São Paulo, Brazil</span>
+                <span>•</span>
+                <span>(+55) 16 99740-5919</span>
+                <span>•</span>
+                <a href="mailto:andersonx1013@gmail.com">andersonx1013@gmail.com</a>
+                <span>•</span>
+                <a href="https://www.linkedin.com/in/anderson-x-86a7b0254/" target="_blank">https://www.linkedin.com/in/anderson-x-86a7b0254/</a>
+            </div>
+        </header>
+
+        <!-- RESUMO PROFISSIONAL -->
+        <section>
+            <h3>Professional Summary</h3>
+			<p>
+				<strong>Lead, Builder, and Principal Software Architect </strong> with over 20 years of experience designing distributed ecosystems and building end-to-end <strong>Generative AI (LLMs & RAG)</strong> <span class="highlight-blue">and Multi-Agent Systems in production</span>. Expert in creating resilient and scalable architectures. Hands-on technical leadership focused on an "AI-First" culture, <span class="highlight-blue">intelligent workflow orchestration, native systems integration </span> and legacy modernization to maximize development speed and <strong>drastically reduce TCO</strong> (Total Cost of Ownership) in mission-critical operations.
+			</p>
+        </section>
+
+        <!-- COMPETÊNCIAS TÉCNICAS & IDIOMAS -->
+        <section>
+            <h3>Technical Skills & Stack</h3>
+            
+            <div class="skills-grid">
+                <div class="skill-category">Agents & Applied AI</div>
+                <div class="skill-list">
+                      <strong>GenAI/LLMs</strong> (<span class="highlight-blue">OpenAI, Azure OpenAI</span>, Gemini, Llama, Anthropic), <span class="highlight-blue">Multi-Agent Frameworks (LangGraph, LangChain, CrewAI, LlamaIndex)</span>, OpenSource AIs and Fine-Tuning. Advanced RAG <span class="highlight-blue">Architecture (Embeddings, Chunking, Re-ranking)</span>. <span class="highlight-blue">Orchestration: Tool Calling, Memory. Evaluation and Security: LLM Evaluation, Guardrails</span>, RASA, <span class="highlight-blue"> n8n </span>.
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">Cloud, Data & Vector DBs</div>
+                <div class="skill-list">
+                    <span class="highlight-blue">Azure (Main Cloud for end-to-end deployment)</span>, AWS, GCP, K8s, Docker. Vector DBs <span class="highlight-blue">(Pinecone)</span>. SQL Server, Oracle, PostgreSQL, Neo4J, ElasticSearch.
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">Engineering, DevEx & Integration</div>
+                <div class="skill-list">
+                    <strong>Python, Node.js</strong>, .NET Core (C#), Go, Java. Event-Driven Architecture (Kafka). <span class="highlight-blue">Robust integrations via REST APIs and Webhooks. Advanced automation with n8n</span>. Code assistants (GitHub Copilot, Cursor).
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">Leadership & Security (Regulated)</div>
+                <div class="skill-list">
+                    DevSecOps, Keycloak (OAuth 2.0), OWASP Top 10, LGPD/GDPR Compliance, Agile/SAFe. Budget Management (Capex/Opex). C4 Model.
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">Languages</div>
+                <div class="skill-list">
+                    <strong>Portuguese</strong> (Native) • <strong>English</strong> (Advanced) • <strong>Spanish</strong> (Advanced)
+                </div>
+            </div>
+        </section>
+		
+        <!-- EXPERIÊNCIA PROFISSIONAL -->
+        <section>
+            <h3>Professional Experience</h3>
+
+            <!-- Jinboo -->
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Jinboo</span> 
+                        <span class="role">| Principal AI Engineer & Software Architect</span>
+                    </div>
+                    <span class="date">Jan 2021 - Present</span>
+                </div>
+                <ul>
+                    <li>
+                        Worked as an end-to-end builder developing <strong>AI agents and multi-agent systems</strong> using <span class="highlight-blue">Python, Node.js, LangChain, and LangGraph</span>, integrating LLMs (OpenAI/OpenSource) to automate complex customer interactions (<span class="highlight-blue">Memory and Tool Calling</span>), reducing support tickets by <strong>30%</strong> and operational costs by 40%.
+                    </li>
+					
+					
+					<li>
+					<span class="company"><span class="highlight-blue">AI for Customer Service and FAQ</span></span> 
+					<ul>
+						<li>
+							<span class="highlight-blue">Built advanced RAG solutions, implementing optimized embedding, chunking, and re-ranking strategies with Vector DBs, directly integrating models into databases, CRMs, and REST APIs via n8n automations and Webhooks.</span>
+						</li>
+						<li>
+							<span class="highlight-blue">Implemented and evolved LLM Evaluation and Guardrails strategies, ensuring technical quality, anti-hallucination security, and consistent model responses in production environments.</span>
+						</li>
+					</ul>
+					</li>
+					
+					
+                    <li>
+                        Designed and executed the deployment of cloud-native microservices and AI architectures on <strong><span class="highlight-blue">Azure</span>/AWS/GCP (K8s)</strong>, ensuring infrastructure monitoring and scalability.
+                    </li>
+					<li>
+                        Implemented an <strong>AI-augmented engineering culture</strong> (using Cursor/Copilot), increasing feature delivery speed by <strong>2x</strong> without the need to increase headcount.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- MercadoCar -->
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">MercadoCar</span> 
+                        <span class="role">| IT Manager & Lead Architect</span>
+                    </div>
+                    <span class="date">Jul 2019 - Dec 2020</span>
+                </div>
+                <ul>
+                    <li>
+                        Directed a critical legacy software modernization via <strong>reverse engineering</strong>, migrating to <strong>.NET Core Microservices</strong>, which reduced technical debt and infrastructure maintenance costs <span class="highlight-blue">on the Azure cloud</span> by <strong>25%</strong>.
+                    </li>
+                    <li>
+                        Implemented data validation pipelines using <strong>R Studio (Anaconda) / Python</strong> to optimize product catalog accuracy in high-volume production environments.
+                    </li>
+                    <li>
+                        Established rigorous InfoSec protocols (IAM, OAuth 2.0, SonarQube) and DevSecOps practices within CI/CD pipelines.
+                    </li>
+					<li>
+                        Deployed <strong>NLP-based ChatBots (RASA, GPT2, llama)</strong> for automated user support, significantly reducing manual intervention <span class="highlight-blue">and laying the foundations for conversational AI automations</span>.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Carguero -->
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Carguero (LDC & Amaggi)</span> 
+                        <span class="role">| Lead & Software Architect</span>
+                    </div>
+                    <span class="date">Dec 2018 - Jul 2019</span>
+                </div>
+                <ul>
+                    <li>
+                        Architected a high-performance logistics search engine using <strong>Python (Pandas, FastAPI)</strong>, processing thousands of daily transactions and optimizing <em>freight matching</em>.
+                    </li>
+                    <li>
+                        Led the mobile/web ecosystem strategy, supported by a .NET Core backend <span class="highlight-blue">orchestrated on Azure</span>, enabling a <strong>seamless user experience</strong>.
+                    </li>
+                    <li>
+                        Deployed <strong>NLP-based ChatBots (RASA, GPT2 preview)</strong> for automated user support, significantly reducing manual intervention <span class="highlight-blue">and laying the foundations for conversational AI automations</span>.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Vector Group / Santander -->
+			<div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Vector Group (Consulting)</span> 
+                        <span class="role">| Tech Lead </span> 
+                    </div>
+                    <span class="date">Sep 2017 - Nov 2018</span>
+                </div>
+                <p style="font-size: 10pt; margin-bottom: 6px; font-style: italic;">Technical leadership and construction of critical integrations for the financial sector and large corporations:</p>
+                <ul>
+                    <li>
+                        <strong>Banco Safra (HomeBroker):</strong> Development of high-availability UI and backend for the new HomeBroker, handling extreme performance and secure transactions through REST APIs.
+                    </li>
+                    <li>
+                        <strong>Santander (Remedy Project):</strong> End-to-end construction of a mission-critical management reporting system for the board of directors, ensuring banking data compliance.
+                    </li>
+                    <li>
+                        <strong>Panini & Odonto Prev Project:</strong> Leadership in B2B integration and hybrid sales App, designing the architecture in Java (Spring Boot) and .NET connected to massive databases (Oracle 12g).
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Super Pagamentos (Santander) -->
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Super Pagamentos (Santander)</span> 
+                        <span class="role">| Lead / Senior Analyst
+                    </div>
+                    <span class="date">Apr 2015 – Dec 2015</span>
+                </div>
+                <ul>
+                    <li>
+                        Acted in internal process control and prepaid card management, including production monitoring and fraud/risk reporting.
+                    </li>
+                    <li>
+                        Developed applications for server monitoring and integrations in critical systems. Robust technical environment involving SQL Server 2008, Oracle 10g, and MongoDB.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CNOVA e Outros Simplificados por espaço se necessário -->
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Highlighted Previous Experiences (CNOVA, G4 Solutions, Sabesp)</span> 
+                        <span class="role">| Architect & Senior Developer</span>
+                    </div>
+                    <span class="date">2014 - 2015</span>
+                </div>
+                <ul>
+                    <li>
+                        Maintenance and architecture of high-volume e-commerce portals (Extra, Casas Bahia).
+                    </li>
+                    <li>
+                        Prototyping of Mobile CallCenter (Native Android/Java) integrated via WebServices, enterprise management systems architecture, and dashboard creation.
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- FORMAÇÃO ACADÊMICA -->
+        <section>
+            <h3>Education</h3>
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Postgraduate Degree in Project Management</span>
+                    </div>
+                    <span class="date">Incomplete</span>
+                </div>
+            </div>
+            <div class="job-entry">
+                <div class="job-header">
+                    <div>
+                        <span class="company">Bachelor's Degree in Computer Science</span>
+                        <span class="role">| Universidade Paulista (UNIP)</span>
+                    </div>
+                    <span class="date">2006</span>
+                </div>
+            </div>
+            <p style="font-size: 9.5pt; margin-top: 10px;">
+                <strong>Certifications & Courses:</strong> Scrum Master, GeoServer, Advanced Java (SUN track), .NET Architecture.
+            </p>
+        </section>
+
+    </div>
+
+</body>
+</html>

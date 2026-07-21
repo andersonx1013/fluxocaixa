@@ -31,7 +31,7 @@ chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
 
 O sistema é composto por dois microsserviços desacoplados com bancos de dados independentes e mensageria assíncrona:
 
-![Diagrama C4 de Containers](docs/diagrams/02-container.png)
+![Arquitetura do Sistema de Fluxo de Caixa](docs/Infograficos/Vis%C3%A3o%20Geral.png)
 
 - **API Lançamentos (`:5101`)**: Processa criações, edições e exclusões de débitos/créditos. Persiste eventos na mesma transação via **Transactional Outbox**.
 - **API Consolidado (`:5102`)**: Projeção de leitura do saldo diário. Consome eventos de forma assíncrona com **Inbox Idempotente** e cache em **Redis**.

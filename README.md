@@ -10,6 +10,23 @@ Solução robusta e resiliente desenvolvida em **.NET 8** para gestão de lança
 
 ---
 
+## 📺 Como Rodar a Apresentação Interativa (Quick Start)
+
+O projeto conta com um **portal web interativo** (`http://127.0.0.1:4177`) que inicializa automaticamente os containers Docker, exibe a arquitetura C4, simuladores e permite executar testes ao vivo:
+
+### 🪟 No Windows (CMD ou PowerShell)
+```cmd
+Iniciar-Apresentacao.cmd
+```
+
+### 🐧 No Linux / macOS (Terminal Bash)
+```bash
+chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
+./docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
+```
+
+---
+
 ## 📐 Arquitetura
 
 O sistema é composto por dois microsserviços desacoplados com bancos de dados independentes e mensageria assíncrona:
@@ -21,29 +38,13 @@ O sistema é composto por dois microsserviços desacoplados com bancos de dados 
 
 ---
 
-## 🚀 Como Executar
+## 🚀 Subindo Apenas os Containers (Docker Compose)
 
-### 1. Subir a Infraestrutura (Docker Compose)
-
-Suba as duas APIs, instâncias do PostgreSQL, RabbitMQ e Redis com um único comando na raiz do projeto:
+Caso deseje subir apenas a infraestrutura backend sem a interface de apresentação visual:
 
 ```bash
 docker compose up -d --build
 ```
-
-### 2. Apresentação Interativa (Web HUD)
-
-Acompanhe a arquitetura, simulações C4, saúde do ambiente e estúdio de testes em uma interface interativa:
-
-- **Windows (CMD ou PowerShell)**:
-  ```cmd
-  Iniciar-Apresentacao.cmd
-  ```
-- **Linux / macOS (Bash)**:
-  ```bash
-  chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
-  ./docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
-  ```
 
 ---
 

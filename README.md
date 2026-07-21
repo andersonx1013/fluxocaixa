@@ -14,20 +14,7 @@ Solução robusta e resiliente desenvolvida em **.NET 8** para gestão de lança
 
 O sistema é composto por dois microsserviços desacoplados com bancos de dados independentes e mensageria assíncrona:
 
-```
-[ Comerciante ] ──> ( API Lançamentos :5101 ) ──> [ Postgres Lançamentos ]
-                                │
-                          (Outbox Worker)
-                                │
-                                ▼
-                           [ RabbitMQ ]
-                                │
-                                ▼
-[ Comerciante ] <── ( API Consolidado :5102 ) <── [ Postgres Consolidado ]
-                                │ (Cache-Aside)
-                                ▼
-                            [ Redis ]
-```
+![Diagrama C4 de Containers](docs/diagrams/02-container.png)
 
 - **API Lançamentos (`:5101`)**: Processa criações, edições e exclusões de débitos/créditos. Persiste eventos na mesma transação via **Transactional Outbox**.
 - **API Consolidado (`:5102`)**: Projeção de leitura do saldo diário. Consome eventos de forma assíncrona com **Inbox Idempotente** e cache em **Redis**.

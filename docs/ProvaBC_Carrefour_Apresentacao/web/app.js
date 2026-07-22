@@ -99,18 +99,7 @@ const glossary = [
   ["WAL", "Log antecipado do PostgreSQL usado em replicação e recuperação."],
 ];
 
-const questions = [
-  ["Por que dois serviços e não um monólito?", "Porque o requisito exige que lançamentos permaneçam disponíveis durante a queda do consolidado. A separação cria limites independentes de falha e escala, com o custo de consistência eventual e maior operação."],
-  ["Como você evita perder o evento depois de salvar o lançamento?", "Lancamento e Outbox são persistidos no mesmo commit. Um BackgroundService publica pendências e só marca a mensagem após publisher confirm."],
-  ["E se o RabbitMQ cair?", "O POST continua gravando no PostgreSQL. O evento permanece no Outbox e é republicado quando o broker retorna."],
-  ["Como evita duplicar o saldo?", "O consolidado grava o MessageId na Inbox na mesma transação do agregado. Redelivery encontra o ID e não reaplica o movimento."],
-  ["Por que Redis não é ponto único de falha?", "Ele é apenas cache-aside. Em falha, a aplicação consulta o PostgreSQL, com maior latência, mas sem perder a leitura."],
-  ["O teste prova produção?", "Não. Ele comprova o requisito no ambiente local. Produção exige soak test, hardware alvo, telemetria, múltiplas réplicas e ensaio de recuperação."],
-  ["Por que JWT local em vez de um provedor real?", "Para manter a prova offline e reproduzível. A arquitetura-alvo documenta OIDC, TLS, secret manager e rotação de chaves."],
-  ["Qual é o principal trade-off?", "A autonomia entre serviços traz consistência eventual, mensageria e complexidade operacional. O ganho é isolar falhas e escalar leitura e escrita independentemente."],
-  ["Como funcionaria o balanceamento de carga?", "Um gateway consulta readiness e distribui requisições entre as APIs stateless. Se uma réplica falha, ela sai da rotação; novas réplicas entram sem afinidade de sessão porque o estado permanece nas dependências compartilhadas."],
-  ["Já posso subir várias réplicas do serviço de lançamentos?", "As requisições HTTP são stateless, mas o publisher do Outbox ainda deve receber claim/lease, por exemplo com FOR UPDATE SKIP LOCKED, ou ser separado em um worker antes de escalar horizontalmente a escrita com segurança operacional."],
-];
+
 
 const scaleScenarios = {
   normal: {
@@ -626,23 +615,7 @@ function showSwagger(url) {
   showDialog("SWAGGER // CONTRATO AO VIVO", wrapper);
 }
 
-function showQuestions() {
-  const container = document.createElement("div");
-  container.className = "question-deck";
-  const title = document.createElement("h2");
-  title.textContent = "Perguntas que o avaliador pode fazer";
-  container.append(title);
-  for (const [question, answer] of questions) {
-    const details = document.createElement("details");
-    const summary = document.createElement("summary");
-    summary.textContent = question;
-    const paragraph = document.createElement("p");
-    paragraph.textContent = answer;
-    details.append(summary, paragraph);
-    container.append(details);
-  }
-  showDialog("MODO ESTUDO // Q&A", container);
-}
+
 
 function renderGlossary(query = "") {
   const normalized = query.trim().toLocaleLowerCase("pt-BR");
@@ -1298,8 +1271,7 @@ function initializeEvents() {
       btn.disabled = true;
     });
   });
-  document.querySelector("#diagramStage").addEventListener("click", () => showImage(selectedDiagram[2], selectedDiagram[1]));
-  document.querySelector("#openQuestions").addEventListener("click", showQuestions);
+
   document.querySelector("#openScaleSimulation").addEventListener("click", showScaleSimulation);
   document.querySelector("#closeDialog").addEventListener("click", () => mediaDialog.close());
   mediaDialog.addEventListener("click", (event) => { if (event.target === mediaDialog) mediaDialog.close(); });

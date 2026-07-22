@@ -14,9 +14,10 @@ Solução robusta e resiliente desenvolvida em **.NET 8** para gestão de lança
 
 ### 1. Subir os Containers Docker
 
-Suba a infraestrutura backend (APIs, PostgreSQL, RabbitMQ e Redis) com o Docker Compose na raiz do projeto:
+Suba a infraestrutura backend (APIs, PostgreSQL, RabbitMQ e Redis) executando o Docker Compose **na raiz do repositório** (onde está localizado o arquivo `docker-compose.yml`):
 
 ```bash
+# Executar no diretório raiz do projeto
 docker compose up -d --build
 ```
 
@@ -25,11 +26,15 @@ docker compose up -d --build
 Com os containers ativos, inicie o portal visual interativo (`http://127.0.0.1:4177`) para navegar pelos diagramas C4, simuladores e executar testes ao vivo:
 
 #### 🪟 No Windows (CMD ou PowerShell)
+Execute o arquivo [`docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.cmd`](docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.cmd):
+
 ```cmd
-Iniciar-Apresentacao.cmd
+.\docs\ProvaBC_Carrefour_Apresentacao\Iniciar-Apresentacao.cmd
 ```
 
 #### 🐧 No Linux / macOS (Terminal Bash)
+Execute o script [`docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh`](docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh):
+
 ```bash
 chmod +x docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
 ./docs/ProvaBC_Carrefour_Apresentacao/Iniciar-Apresentacao.sh
